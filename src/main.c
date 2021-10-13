@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "include/lex.h"
+#include "include/parser.h"
 
 int main(int argc, char* argv[]) {
 
@@ -7,12 +8,11 @@ int main(int argc, char* argv[]) {
         "print :: \"Hello World!\";\n"
     );
 
-    token_T* token = (void*) 0;
+    parser_T* parser = init_parser(lexer);
+    AST_T* root = parser_parse(parser);
 
-    while ((token = lexer_get_next_token(lexer)) != (void*) 0)
-    {
-        printf("token %d, %s\n", token->type, token->value);
-    }
+    printf("%d\n", root->type);
+    printf("%zu\n", root->compound_size);
 
     return 0;
 }
