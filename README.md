@@ -1,8 +1,8 @@
-# Programming Language Dina
+# Programming Language T#
 
 In Development...
 
-### Dina is planed to be
+### T# is planed to be
 
 - [ ] Compiled
 - [ ] ...
