@@ -54,23 +54,13 @@ token_T* lexer_get_next_token(lexer_T* lexer)
             return lexer_collect_string(lexer);
         }
 
-        if (lexer->c == ':')
-        {
-            char* value = lexer_get_current_char_as_string(lexer);
-            lexer_advance(lexer);
-            if (lexer->c == ':')
-            {
-                value = realloc(value, strlen(value) + 2);
-                char* strchar = lexer_get_current_char_as_string(lexer);
-                strcat(value, strchar);
-                free(strchar);
-
-                return lexer_advance_token(lexer, init_token(TOKEN_TWO_COLON, value));
-            }
-        }
-
         switch (lexer->c)
         {
+            case '{': return lexer_advance_token(lexer, init_token(TOKEN_LBRACE, lexer_get_current_char_as_string(lexer))); break;
+            case '}': return lexer_advance_token(lexer, init_token(TOKEN_RBRACE, lexer_get_current_char_as_string(lexer))); break;
+            case '(': return lexer_advance_token(lexer, init_token(TOKEN_LPAREN, lexer_get_current_char_as_string(lexer))); break;
+            case ')': return lexer_advance_token(lexer, init_token(TOKEN_RPAREN, lexer_get_current_char_as_string(lexer))); break;
+            case '=': return lexer_advance_token(lexer, init_token(TOKEN_EQUAL, lexer_get_current_char_as_string(lexer))); break;
             case ';': return lexer_advance_token(lexer, init_token(TOKEN_SEMI, lexer_get_current_char_as_string(lexer))); break;
             case '\0': return init_token(TOKEN_EOF, "\0"); break;
             default: printf("\x1b[31m"); printf("SyntaxError: Unexpected '%c' (line %d)\n", lexer->c, lexer->line_n); exit(1); break;
