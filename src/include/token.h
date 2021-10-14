@@ -8,7 +8,11 @@ typedef struct TOKEN_STRUCT
         TOKEN_STRING, // "abc"
         TOKEN_ID, // abc
         TOKEN_SEMI, // ;
-        TOKEN_TWO_COLON, // ::
+        TOKEN_LPAREN, // (
+        TOKEN_RPAREN, // )
+        TOKEN_LBRACE, // {
+        TOKEN_RBRACE, // }
+        TOKEN_EQUAL, // =
         TOKEN_EOF // End Of File
     } type;
 
