@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "include/lex.h"
 #include "include/parser.h"
-#include "include/visitor.h"
+#include "include/asm.h"
 #include "include/io.h"
 #include "include/scope.h"
 
