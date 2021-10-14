@@ -1,3 +1,5 @@
 
-print :: "Hello World!";
-
+func main() {
+    text = "Hello World\n";
+    print(text);
+};
