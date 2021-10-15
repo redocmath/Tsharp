@@ -11,7 +11,7 @@ $(exec): $(objects)
 
 install:
 	make
-	cp ./a.out /usr/local/bin/tsharp
+	cp ./tsharp.out /usr/local/bin/tsharp
 	
 
 clean:
