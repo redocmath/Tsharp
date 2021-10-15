@@ -1,4 +1,6 @@
-# Programming Language T#
+<div align="center">
+    <h1> The T# Programming Language</h1>
+</div>
 
 WARNING! THIS LANGUAGE IS A WORK IN PROGRESS! ANYTHING CAN CHANGE AT ANY MOMENT WITHOUT ANY NOTICE!
 
