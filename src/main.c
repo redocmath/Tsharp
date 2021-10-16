@@ -5,6 +5,7 @@
 #include "include/asm.h"
 #include "include/io.h"
 #include "include/scope.h"
+#include <string.h>
 
 int main(int argc, char* argv[]) {
 
@@ -23,7 +24,9 @@ int main(int argc, char* argv[]) {
     char* name = "main";
     AST_T* fdef = scope_find_func(parser->scope, name);
 
-    system("gcc -o main comp.c");
+    system("/usr/local/Cellar/nasm/2.15.05/bin/nasm -f macho64 main.asm");
+
+    system("ld main.o -o main -no_pie -macosx_version_min 11.4 -L /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib -lSystem");
 
     return 0;
 }
