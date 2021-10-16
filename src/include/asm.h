@@ -4,12 +4,10 @@
 
 typedef struct VISITOR_STRUCT
 {
-    
+
 } visitor_T;
 
 visitor_T* init_visitor();
-
-char* visitor_read_current_comp_file();
 
 AST_T* visitor_visit(visitor_T* visitor, AST_T* node);
 
