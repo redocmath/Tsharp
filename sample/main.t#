@@ -1,5 +1,5 @@
 
 func main() {
-    text = "Hello World\n";
+    text = "Hello World";
     print(text);
 };
