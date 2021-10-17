@@ -1,13 +1,20 @@
+/*
+
+I will rewrite this file later....
+
+*/
+
 #include "include/asm.h"
 #include "include/scope.h"
 #include "include/AST.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#define Max 10000
 
 /* ↓ change this later */
-char mainfile[1000];
-char datafile[1000];
+char mainfile[Max];
+char datafile[Max];
 char* contents;
 
 static AST_T* builtin_function_print(visitor_T* visitor, AST_T** args, int args_size, char* name)
@@ -38,7 +45,10 @@ static AST_T* builtin_function_print(visitor_T* visitor, AST_T** args, int args_
 visitor_T* init_visitor()
 {
     // Main Section
-    contents = "; Assembly Main Section\n";
+    contents = "; Assembly Main Section\n"
+               "GLOBAL _main\n\n"
+               "section .text\n"
+               "global start\n\n";
     strcat(mainfile, contents);
 
     // Data Section
@@ -75,6 +85,15 @@ AST_T* visitor_visit_function_call(visitor_T* visitor, AST_T* node)
     if (strcmp(node->function_call_name, "print") == 0)
     {
         return builtin_function_print(visitor, node->function_call_arguments, node->function_call_arguments_size, node->function_call_args_name);
+    }
+    else
+    {
+        contents="\ncall ";
+        strcat(mainfile, contents);
+        contents=node->function_call_name;
+        strcat(mainfile, contents);
+        contents="\nsyscall";
+        strcat(mainfile, contents);
     }
 
     return node;
@@ -125,18 +144,28 @@ AST_T* visitor_visit_function_definition(visitor_T* visitor, AST_T* node)
         node
     );
 
-    contents ="GLOBAL _main\n\n"
-               "section .text\n"
-               "global start\n\n"
-               "_main:\n";
-    strcat(mainfile, contents);
+    if (strcmp(node->function_definition_name, "main") == 0)
+    {
+        contents ="_main:";
+        strcat(mainfile, contents);
 
-    visitor_visit(visitor, node->function_definition_body);
+        visitor_visit(visitor, node->function_definition_body);
 
-    contents = "\nmov rax, 0x2000001\n"
-               "mov rdi, 0\n"
-               "syscall\n";
-    strcat(mainfile, contents);
+        contents = "\nmov rax, 0x2000001\n"
+                "mov rdi, 0\n"
+                "syscall\n";
+        strcat(mainfile, contents);
+    }
+    else
+    {
+        contents =node->function_definition_name;
+        strcat(mainfile, contents);
+        contents =":";
+        strcat(mainfile, contents);
+        visitor_visit(visitor, node->function_definition_body);
+        contents ="ret\n\n";
+        strcat(mainfile, contents);
+    }
 
     return node;
 }
