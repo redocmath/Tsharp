@@ -9,8 +9,8 @@ WARNING! THIS LANGUAGE IS A WORK IN PROGRESS! ANYTHING CAN CHANGE AT ANY MOMENT 
 $ make
 ```
 
-```go
-func main() {
+```rs
+fn main() {
     text = "Hello World";
     print(text);
 };
@@ -22,4 +22,20 @@ $ ./tsharp.out <filename>.t#
 
 ```
 $ ./main
+```
+
+> Call function
+```rs
+
+fn test() {
+    language = "T#";
+    print(language);
+};
+
+fn main() {
+    language();
+
+    text = "Hello World";
+    print(text);
+};
 ```
