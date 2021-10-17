@@ -279,7 +279,7 @@ AST_T* parser_parse_function_call(parser_T* parser, scope_T* scope){
 
 AST_T* parser_parse_id(parser_T* parser, scope_T* scope)
 {
-    if (strcmp(parser->current_token->value, "func") == 0)
+    if (strcmp(parser->current_token->value, "fn") == 0)
     {
         return parser_parse_function_definition(parser, scope);
     }
@@ -294,7 +294,7 @@ AST_T* parser_parse_id(parser_T* parser, scope_T* scope)
 
 AST_T* parser_parse_id_func_body(parser_T* parser, scope_T* scope)
 {
-    if (strcmp(parser->current_token->value, "func") == 0)
+    if (strcmp(parser->current_token->value, "fn") == 0)
     {
         return parser_parse_function_definition(parser, scope);
     }
