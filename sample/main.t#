@@ -1,5 +1,11 @@
 
-func main() {
-    text = "Hello World";
+fn test() {
+    language = "T#";
+    print(language);
+};
+
+fn main() {
+    test();
+    text = "Hello World!";
     print(text);
 };
