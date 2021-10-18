@@ -11,7 +11,8 @@ $ make
 
 ```rs
 fn main() {
-    print("Hello World!");
+    text = "Hello World!";
+    print(text);
 };
 ```
 
@@ -26,7 +27,8 @@ $ ./main
 > Hello World!
 ```rs
 fn main() {
-    print("Hello World!");
+    text = "Hello World!";
+    print(text);
 };
 ```
 
