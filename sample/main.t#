@@ -1,11 +1,9 @@
 
-fn main() {
-    text = "Hello";
-    print(text);
-    test();
-};
+func test() {
+    print("Hello From Test Function");
+}
 
-fn test() {
-    sample = "Yooo";
-    print(sample);
+func main() {
+    test();
+    print("Hello World!");
 }
