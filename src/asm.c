@@ -42,6 +42,75 @@ static AST_T* builtin_function_print(visitor_T* visitor, AST_T** args, int args_
     return init_ast(AST_NOOP);
 }
 
+int intCount = 1;
+static AST_T* builtin_function_print_no_name(visitor_T* visitor, AST_T** args, int args_size)
+{
+    char* charCount;
+    sprintf(charCount, "%d", intCount);
+
+    for (int i = 0; i < args_size; i++)
+    {
+        AST_T* visited_ast = visitor_visit(visitor, args[i]);
+        if (visited_ast->type == AST_STRING)
+        {
+            contents = "str_";
+            strcat(datafile, contents);
+
+            contents = charCount;
+            strcat(datafile, contents);
+
+            contents = " db \"";
+            strcat(datafile, contents);
+
+            contents = visited_ast->string_value;
+            strcat(datafile, contents);
+
+            contents = "\", 0x0a\n";
+            strcat(datafile, contents);
+
+            contents = "str_";
+            strcat(datafile, contents);
+
+            contents = charCount;
+            strcat(datafile, contents);
+
+            contents = "len: equ $ - str_";
+            strcat(datafile, contents);
+
+            contents = charCount;
+            strcat(datafile, contents);
+
+            contents = "\n";
+            strcat(datafile, contents);
+
+            contents = "\nmov rax, 0x2000004\n"
+                       "mov rdi, 1\n"
+                       "mov rsi, str_";
+            strcat(mainfile, contents);
+            
+            contents = charCount;
+            strcat(mainfile, contents);
+                    
+            contents = "\nmov rdx, ";
+            strcat(mainfile, contents);
+
+            contents = "str_";
+            strcat(mainfile, contents);
+
+            contents = charCount;
+            strcat(mainfile, contents);
+
+            contents = "len\n";
+            strcat(mainfile, contents);
+
+            contents = "syscall\n";
+            strcat(mainfile, contents);
+        }
+    }
+    intCount += 1;
+    return init_ast(AST_NOOP);
+}
+
 visitor_T* init_visitor()
 {
     // Main Section
@@ -52,7 +121,7 @@ visitor_T* init_visitor()
     strcat(mainfile, contents);
 
     // Data Section
-    contents = "section .data\n";
+    contents = "\nsection .data\n";
     strcat(datafile, contents);
 
     visitor_T* visitor = calloc(1, sizeof(struct VISITOR_STRUCT));
@@ -84,6 +153,10 @@ AST_T* visitor_visit_function_call(visitor_T* visitor, AST_T* node)
 {
     if (strcmp(node->function_call_name, "print") == 0)
     {
+        if (node->function_call_args_name == (void*) 0)
+        {
+            return builtin_function_print_no_name(visitor, node->function_call_arguments, node->function_call_arguments_size);
+        }
         return builtin_function_print(visitor, node->function_call_arguments, node->function_call_arguments_size, node->function_call_args_name);
     }
     else
@@ -211,5 +284,5 @@ AST_T* visitor_visit_compound(visitor_T* visitor, AST_T* node)
         fclose(fp);
     }
 
-    return init_ast(AST_NOOP);    
+    return init_ast(AST_NOOP);
 }
