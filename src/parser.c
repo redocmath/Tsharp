@@ -241,6 +241,41 @@ AST_T* parser_parse_variable_outside_func(parser_T* parser, scope_T* scope)
     return ast;
 }
 
+AST_T* parser_parse_print(parser_T* parser, scope_T* scope)
+{
+    AST_T* ast = init_ast(AST_PRINT);
+
+    parser_eat(parser, TOKEN_ID);
+
+    ast->print_args = calloc(1, sizeof(struct AST_STRUCT*));
+
+    if (parser->current_token->type != TOKEN_RPAREN)
+    {
+        AST_T* ast_expr = parser_parse_expr(parser, scope);
+
+        ast->print_args[0] = ast_expr;
+        ast->print_size += 1;
+    }
+
+    while (parser->current_token->type == TOKEN_COMMA)
+    {
+        parser_eat(parser, TOKEN_COMMA);
+        
+        AST_T* ast_expr = parser_parse_expr(parser, scope);
+        
+        ast->print_size += 1;
+
+        ast->print_args = realloc(
+            ast->print_args,
+            ast->print_size * sizeof(struct AST_STRUCT)
+        );
+        ast->print_args[ast->print_size-1] = ast_expr;
+    }
+
+    ast->scope = scope;
+    return ast;
+}
+
 AST_T* parser_parse_string(parser_T* parser, scope_T* scope)
 {
     AST_T* ast_string = init_ast(AST_STRING);
@@ -279,7 +314,7 @@ AST_T* parser_parse_function_call(parser_T* parser, scope_T* scope){
 
 AST_T* parser_parse_id(parser_T* parser, scope_T* scope)
 {
-    if (strcmp(parser->current_token->value, "fn") == 0)
+    if (strcmp(parser->current_token->value, "func") == 0)
     {
         return parser_parse_function_definition(parser, scope);
     }
@@ -294,9 +329,13 @@ AST_T* parser_parse_id(parser_T* parser, scope_T* scope)
 
 AST_T* parser_parse_id_func_body(parser_T* parser, scope_T* scope)
 {
-    if (strcmp(parser->current_token->value, "fn") == 0)
+    if (strcmp(parser->current_token->value, "func") == 0)
     {
         return parser_parse_function_definition(parser, scope);
+    }
+    if (strcmp(parser->current_token->value, "print") == 0)
+    {
+        return parser_parse_print(parser, scope);
     }
     return parser_parse_variable(parser, scope);
 }
