@@ -11,7 +11,7 @@ $ sudo make install
 
 ```go
 func main() {
-    print "Hello World!";
+    print("Hello World!");
 }
 ```
 
@@ -27,7 +27,7 @@ $ ./main
 ```go
 
 func test() {
-    print "T#";
+    print("T#");
 }
 
 func main() {
