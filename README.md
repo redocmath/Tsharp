@@ -33,7 +33,7 @@ fn test() {
 };
 
 fn main() {
-    language();
+    test();
 
     text = "Hello World";
     print(text);
