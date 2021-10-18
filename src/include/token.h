@@ -13,6 +13,7 @@ typedef struct TOKEN_STRUCT
         TOKEN_LBRACE, // {
         TOKEN_RBRACE, // }
         TOKEN_EQUAL, // =
+        TOKEN_COMMA, // ,
         TOKEN_EOF // End Of File
     } type;
 
