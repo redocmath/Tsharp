@@ -6,7 +6,7 @@
 WARNING! THIS LANGUAGE IS A WORK IN PROGRESS! ANYTHING CAN CHANGE AT ANY MOMENT WITHOUT ANY NOTICE!
 
 ```
-$ make
+$ sudo make install
 ```
 
 ```rs
@@ -17,7 +17,7 @@ fn main() {
 ```
 
 ```
-$ ./tsharp.out <filename>.t#
+$ t# <filename>.t#
 ```
 
 ```
