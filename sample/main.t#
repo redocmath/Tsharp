@@ -1,11 +1,4 @@
 
-fn test() {
-    language = "T#";
-    print(language);
-};
-
 fn main() {
-    test();
-    text = "Hello World!";
-    print(text);
+    print("Hello World!");
 };
