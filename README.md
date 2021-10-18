@@ -11,8 +11,7 @@ $ make
 
 ```rs
 fn main() {
-    text = "Hello World";
-    print(text);
+    print("Hello World!");
 };
 ```
 
@@ -22,6 +21,13 @@ $ ./tsharp.out <filename>.t#
 
 ```
 $ ./main
+```
+
+> Hello World!
+```rs
+fn main() {
+    print("Hello World!");
+};
 ```
 
 > Call function

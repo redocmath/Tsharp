@@ -240,7 +240,7 @@ AST_T* visitor_visit_function_definition(visitor_T* visitor, AST_T* node)
         strcat(mainfile, contents);
     }
 
-    return node;
+    return node; 
 }
 
 AST_T* visitor_visit_string(visitor_T* visitor, AST_T* node)
