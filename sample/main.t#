@@ -1,4 +1,11 @@
 
 fn main() {
-    print("Hello World!");
+    text = "Hello";
+    print(text);
+    test();
 };
+
+fn test() {
+    sample = "Yooo";
+    print(sample);
+}
