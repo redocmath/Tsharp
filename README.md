@@ -9,8 +9,8 @@ WARNING! THIS LANGUAGE IS A WORK IN PROGRESS! ANYTHING CAN CHANGE AT ANY MOMENT 
 $ sudo make install
 ```
 
-```rs
-fn main() {
+```go
+func main() {
     text = "Hello World!";
     print(text);
 };
@@ -25,22 +25,22 @@ $ ./main
 ```
 
 > Hello World!
-```rs
-fn main() {
+```go
+func main() {
     text = "Hello World!";
     print(text);
 };
 ```
 
 > Call function
-```rs
+```go
 
-fn test() {
+func test() {
     language = "T#";
     print(language);
 };
 
-fn main() {
+func main() {
     test();
 
     text = "Hello World";
