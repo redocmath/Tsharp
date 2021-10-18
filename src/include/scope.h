@@ -15,6 +15,8 @@ scope_T* init_scope();
 
 AST_T* scope_add_func_definition(scope_T* scope, AST_T* fdef);
 
+AST_T* scope_get_func_definition(scope_T* scope, const char* name);
+
 AST_T* scope_find_func(scope_T* scope, const char* name);
 
 AST_T* scope_add_variable_definition(scope_T* scope, AST_T* vdef);
