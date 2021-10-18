@@ -73,9 +73,16 @@ AST_T* parser_parse_statements(parser_T* parser, scope_T* scope)
     compound->compound_value[0] = ast_statement;
     compound->compound_size += 1;
 
-    while (parser->current_token->type == TOKEN_SEMI)
+    while (parser->current_token->type == TOKEN_SEMI || parser->current_token->type == TOKEN_RBRACE)
     {
-        parser_eat(parser, TOKEN_SEMI);
+        if (parser->current_token->type == TOKEN_SEMI)
+        {
+            parser_eat(parser, TOKEN_SEMI);
+        }
+        else
+        {
+            parser_eat(parser, TOKEN_RBRACE);
+        }
         
         AST_T* ast_statement = parser_parse_statement(parser, scope);
 
@@ -185,9 +192,14 @@ AST_T* parser_parse_function_definition(parser_T* parser, scope_T* scope)
     parser_eat(parser, TOKEN_RPAREN);
     parser_eat(parser, TOKEN_LBRACE);
 
-    ast->function_definition_body = parser_parse_statements_func_body(parser, scope);
+    if (parser->current_token->type == TOKEN_RBRACE)
+    {
+        printf("\x1b[31m");
+        printf("Syntax Error: function body is empty\n");
+        exit(1);
+    }
 
-    parser_eat(parser, TOKEN_RBRACE);
+    ast->function_definition_body = parser_parse_statements_func_body(parser, scope);
 
     ast->scope = scope;
 
@@ -241,41 +253,6 @@ AST_T* parser_parse_variable_outside_func(parser_T* parser, scope_T* scope)
     return ast;
 }
 
-AST_T* parser_parse_print(parser_T* parser, scope_T* scope)
-{
-    AST_T* ast = init_ast(AST_PRINT);
-
-    parser_eat(parser, TOKEN_ID);
-
-    ast->print_args = calloc(1, sizeof(struct AST_STRUCT*));
-
-    if (parser->current_token->type != TOKEN_RPAREN)
-    {
-        AST_T* ast_expr = parser_parse_expr(parser, scope);
-
-        ast->print_args[0] = ast_expr;
-        ast->print_size += 1;
-    }
-
-    while (parser->current_token->type == TOKEN_COMMA)
-    {
-        parser_eat(parser, TOKEN_COMMA);
-        
-        AST_T* ast_expr = parser_parse_expr(parser, scope);
-        
-        ast->print_size += 1;
-
-        ast->print_args = realloc(
-            ast->print_args,
-            ast->print_size * sizeof(struct AST_STRUCT)
-        );
-        ast->print_args[ast->print_size-1] = ast_expr;
-    }
-
-    ast->scope = scope;
-    return ast;
-}
-
 AST_T* parser_parse_string(parser_T* parser, scope_T* scope)
 {
     AST_T* ast_string = init_ast(AST_STRING);
@@ -295,15 +272,29 @@ AST_T* parser_parse_function_call(parser_T* parser, scope_T* scope){
 
     parser_eat(parser, TOKEN_LPAREN);
 
-    ast->function_call_arguments = calloc(1, sizeof(struct AST_STRUCT*));
-
-    if (parser->current_token->type == TOKEN_ID) {
-        ast->function_call_args_name = parser->current_token->value;
+    ast->args = calloc(1, sizeof(struct AST_STRUCT*));
+    
+    if (parser->current_token->type != TOKEN_RPAREN)
+    {
+        AST_T* ast_expr = parser_parse_expr(parser, scope);
+        ast->args[0] = ast_expr;
+        ast->args_size += 1;
     }
 
-    AST_T* ast_expr = parser_parse_expr(parser, scope);
-    ast->function_call_arguments[0] = ast_expr;
-    ast->function_call_arguments_size += 1;
+    while (parser->current_token->type == TOKEN_COMMA)
+    {
+        parser_eat(parser, TOKEN_COMMA);
+        
+        AST_T* ast_expr = parser_parse_expr(parser, scope);
+        
+        ast->args_size += 1;
+
+        ast->args = realloc(
+            ast->args,
+            ast->args_size * sizeof(struct AST_STRUCT)
+        );
+        ast->args[ast->args_size-1] = ast_expr;
+    }
 
     parser_eat(parser, TOKEN_RPAREN);
 
@@ -318,12 +309,6 @@ AST_T* parser_parse_id(parser_T* parser, scope_T* scope)
     {
         return parser_parse_function_definition(parser, scope);
     }
-    if (strcmp(parser->current_token->value, "print") == 0)
-    {
-        printf("\x1b[31m");
-        printf("Syntax Error: non-declaration statement outside function body\n");
-        exit(1);
-    }
     return parser_parse_variable_outside_func(parser, scope);
 }
 
@@ -332,10 +317,6 @@ AST_T* parser_parse_id_func_body(parser_T* parser, scope_T* scope)
     if (strcmp(parser->current_token->value, "func") == 0)
     {
         return parser_parse_function_definition(parser, scope);
-    }
-    if (strcmp(parser->current_token->value, "print") == 0)
-    {
-        return parser_parse_print(parser, scope);
     }
     return parser_parse_variable(parser, scope);
 }
