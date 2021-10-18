@@ -12,7 +12,7 @@ $ sudo make install
 ```go
 func main() {
     print "Hello World!";
-};
+}
 ```
 
 ```
@@ -28,9 +28,9 @@ $ ./main
 
 func test() {
     print "T#";
-};
+}
 
 func main() {
     test();
-};
+}
 ```
