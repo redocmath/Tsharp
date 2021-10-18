@@ -61,6 +61,13 @@ AST_T* visitor_visit_function_call(visitor_T* visitor, AST_T* node)
         node->function_call_name
     );
 
+    if (fdef == (void*) 0)
+    {
+        printf("\x1b[31m");
+        printf("Error: %s function does not exist\n", ndoe->function_call_name);
+        exit(1);
+    }
+
     visitor_visit(visitor, fdef->function_definition_body);
 
     return node;
