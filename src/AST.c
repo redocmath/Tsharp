@@ -16,6 +16,10 @@ AST_T* init_ast(int type)
     ast->function_definition_body = (void*) 0;
     ast->function_definition_name = (void*) 0;
 
+    // AST_PRINT
+    ast->print_args = (void*) 0;
+    ast->print_size = 0;
+
     // AST_VARIABLE
     ast->variable_name = (void*) 0;
 
