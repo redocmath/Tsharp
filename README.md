@@ -11,8 +11,7 @@ $ sudo make install
 
 ```go
 func main() {
-    text = "Hello World!";
-    print(text);
+    print "Hello World!";
 };
 ```
 
@@ -24,26 +23,14 @@ $ t# <filename>.t#
 $ ./main
 ```
 
-> Hello World!
-```go
-func main() {
-    text = "Hello World!";
-    print(text);
-};
-```
-
 > Call function
 ```go
 
 func test() {
-    language = "T#";
-    print(language);
+    print "T#";
 };
 
 func main() {
     test();
-
-    text = "Hello World";
-    print(text);
 };
 ```
