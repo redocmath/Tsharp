@@ -8,6 +8,7 @@ typedef struct AST_STRUCT
     enum {
         AST_VARIABLE_DEFINITION,
         AST_FUNCTION_DEFINITION,
+        AST_PRINT,
         AST_VARIABLE,
         AST_FUNCTION_CALL,
         AST_STRING,
@@ -25,6 +26,10 @@ typedef struct AST_STRUCT
     struct AST_STRUCT* function_definition_body;
     char* function_definition_name;
 
+    // AST_PRINT
+    struct AST_STRUCT** print_args;
+    size_t print_size;
+    
     // AST_VARIABLE
     char* variable_name;
 
