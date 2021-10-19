@@ -143,6 +143,8 @@ AST_T* assembly_visit_function_call(assembly_T* assembly, AST_T* node)
         return builtin_function_print_no_variable(assembly, node->args, node->args_size);
     }
 
+    scope_find_func(node->scope, node->function_call_name);
+
     add_to_main_section("call ");
     add_to_main_section(node->function_call_name);
     add_to_main_section("\n\n");
