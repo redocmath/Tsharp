@@ -5,32 +5,31 @@
 
 WARNING! THIS LANGUAGE IS A WORK IN PROGRESS! ANYTHING CAN CHANGE AT ANY MOMENT WITHOUT ANY NOTICE!
 
+> Install
 ```
 $ sudo make install
 ```
 
-```go
-func main() {
-    print("Hello World!");
-}
-```
-
+> Run
 ```
 $ t# <filename>.t#
+```
+
+> How to compile
+
+Change the command in Tsharp/src/main.c
+
+```
+$ t# build <filename>.t#
 ```
 
 ```
 $ ./main
 ```
 
-> Call function
+> Hello World
 ```go
-
-func test() {
-    print("T#");
-}
-
 func main() {
-    test();
+    print("Hello World");
 }
 ```
