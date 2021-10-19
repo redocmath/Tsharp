@@ -143,6 +143,10 @@ AST_T* assembly_visit_function_call(assembly_T* assembly, AST_T* node)
         return builtin_function_print_no_variable(assembly, node->args, node->args_size);
     }
 
+    add_to_main_section("call ");
+    add_to_main_section(node->function_call_name);
+    add_to_main_section("\n\n");
+
     return 0;
 }
 
@@ -173,6 +177,15 @@ AST_T* assembly_visit_function_definition(assembly_T* assembly, AST_T* node)
         );
 
         return node;
+    }
+    else
+    {
+        add_to_main_section(node->function_definition_name);
+        add_to_main_section(":\n");
+
+        assembly_visit(assembly, node->function_definition_body);
+
+        add_to_main_section("ret\n\n");
     }
 
     return node;
