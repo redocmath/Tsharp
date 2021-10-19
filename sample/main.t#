@@ -1,9 +1,12 @@
 
 func test() {
-    print("Hello From Test Function");
+    print("Test Funciton");
 }
 
 func main() {
     test();
-    print("Hello World!");
+    
+    print("Ibuki Yoshida");
+    print("Hello World");
+    print("Compiled!");
 }
