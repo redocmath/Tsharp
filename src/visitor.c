@@ -75,6 +75,11 @@ AST_T* visitor_visit_function_call(visitor_T* visitor, AST_T* node)
 
 AST_T* visitor_visit_variable_definition(visitor_T* visitor, AST_T* node)
 {
+    scope_add_variable_definition(
+        node->scope,
+        node
+    );
+
     return node;
 }
 
@@ -100,7 +105,17 @@ AST_T* visitor_visit_string(visitor_T* visitor, AST_T* node)
 
 AST_T* visitor_visit_variable(visitor_T* visitor, AST_T* node)
 {
-    return node;
+    AST_T* vdef = scope_get_variable_definition(
+        node->scope,
+        node->variable_name
+    );
+
+    if (vdef != (void*) 0)
+        return visitor_visit(visitor, vdef->variable_definition_value);
+
+    printf("\x1b[31m");
+    printf("Error: Undifined variable '%s'\n", node->variable_name);
+    exit(1);
 }
 
 AST_T* visitor_visit_compound(visitor_T* visitor, AST_T* node)
