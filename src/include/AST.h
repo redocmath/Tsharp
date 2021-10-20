@@ -1,6 +1,5 @@
 #ifndef AST_H
 #define AST_H
-
 #include <stdio.h>
 
 typedef struct AST_STRUCT
