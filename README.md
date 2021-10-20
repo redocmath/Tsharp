@@ -17,7 +17,7 @@ $ t# <filename>.t#
 
 > How to compile
 
-Change the command in Tsharp/src/main.c
+Rewrite the command written in the Tsharp/src/main.c file.
 
 ```
 $ t# build <filename>.t#
