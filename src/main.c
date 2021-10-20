@@ -22,15 +22,15 @@ int main(int argc, char* argv[]) {
 
         assembly_T* assembly = init_assembly();
 
-        assembly_visit(assembly, root);
+        assembly_visit(assembly, root, "NULL");
 
         char* name = "main";
         AST_T* fdef = scope_find_func(parser->scope, name);
 
         add_to_main_section(get_file_contents("dataSec.asm"));
-
+        
+        /* Rewrite this */
         system("/usr/local/Cellar/nasm/2.15.05/bin/nasm -f macho64 main.asm");
-
         system("ld main.o -o main -no_pie -macosx_version_min 11.4 -L /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib -lSystem");
         
         return 0;
