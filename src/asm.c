@@ -72,15 +72,15 @@ char* int_to_string(int x)
     return str;
 }
 
-AST_T* assembly_visit(assembly_T* assembly, AST_T* node)
+AST_T* assembly_visit(assembly_T* assembly, AST_T* node, char* operation)
 {
     switch (node->type)
     {
         case AST_FUNCTION_DEFINITION: return assembly_visit_function_definition(assembly, node); break;
         case AST_VARIABLE_DEFINITION: return assembly_visit_variable_definition(assembly, node); break;
         case AST_FUNCTION_CALL: return assembly_visit_function_call(assembly, node); break;
-        case AST_VARIABLE: return assembly_visit_variable(assembly, node); break;
-        case AST_STRING: return assembly_visit_string(assembly, node); break;
+        case AST_VARIABLE: return assembly_visit_variable(assembly, node, operation); break;
+        case AST_STRING: return assembly_visit_string(assembly, node, operation); break;
         case AST_COMPOUND: return assembly_visit_compound(assembly, node); break;
         case AST_NOOP: return node; break;
     }
@@ -92,55 +92,15 @@ AST_T* assembly_visit(assembly_T* assembly, AST_T* node)
     return init_ast(AST_NOOP);
 }
 
-int str_count = 0;
-static AST_T* builtin_function_print_no_variable(assembly_T* assembly, AST_T** args, int args_size)
-{
-    for (int i = 0; i < args_size; i++)
-    {
-        AST_T* visited_ast = assembly_visit(assembly, args[i]);
-
-        if (visited_ast->type == AST_STRING)
-        {
-            /* Main Section Assmebly */
-            add_to_main_section(
-                "mov rax, 0x2000004\n"
-                "mov rdi, 1\n"
-                "mov rsi, str_"
-            );
-            add_to_main_section(int_to_string(str_count));
-            add_to_main_section("\n");
-            add_to_main_section("mov rdx, str_");
-            add_to_main_section(int_to_string(str_count));
-            add_to_main_section(
-                "_len\n"
-                "syscall\n\n"
-            );
-            
-            /* Data Section Assmebly */
-            add_to_data_section("str_");
-            add_to_data_section(int_to_string(str_count));
-            add_to_data_section(" db \"");
-            add_to_data_section(visited_ast->string_value);
-            add_to_data_section("\", 0xa\n");
-            add_to_data_section("str_");
-            add_to_data_section(int_to_string(str_count));
-            add_to_data_section("_len: equ $ - ");
-            add_to_data_section("str_");
-            add_to_data_section(int_to_string(str_count));
-            add_to_data_section("\n");
-        }
-
-        str_count+=1;
-    }
-
-    return init_ast(AST_NOOP);
-}
-
 AST_T* assembly_visit_function_call(assembly_T* assembly, AST_T* node)
 {
     if (strcmp(node->function_call_name, "print") == 0)
     {
-        return builtin_function_print_no_variable(assembly, node->args, node->args_size);
+        for (int i = 0; i < node->args_size; i++)
+        {
+            AST_T* visited = assembly_visit(assembly, node->args[i], "print");
+        }
+        return init_ast(AST_NOOP);
     }
 
     scope_find_func(node->scope, node->function_call_name);
@@ -154,7 +114,24 @@ AST_T* assembly_visit_function_call(assembly_T* assembly, AST_T* node)
 
 AST_T* assembly_visit_variable_definition(assembly_T* assembly, AST_T* node)
 {
-    return 0;
+    scope_add_variable_definition(
+        node->scope,
+        node
+    );
+
+    AST_T* value = assembly_visit(assembly, node->variable_definition_value, "NULL");
+
+    add_to_data_section(node->variable_definition_variable_name);
+    add_to_data_section(" db \"");
+    add_to_data_section(value->string_value);
+    add_to_data_section("\", 0xa\n");
+
+    add_to_data_section(node->variable_definition_variable_name);
+    add_to_data_section("_len: equ $ - ");
+    add_to_data_section(node->variable_definition_variable_name);
+    add_to_data_section("\n");
+
+    return node;
 }
 
 AST_T* assembly_visit_function_definition(assembly_T* assembly, AST_T* node)
@@ -170,7 +147,7 @@ AST_T* assembly_visit_function_definition(assembly_T* assembly, AST_T* node)
             "_main:\n"
         );
 
-        assembly_visit(assembly, node->function_definition_body);
+        assembly_visit(assembly, node->function_definition_body, "NULL");
 
         add_to_main_section(
             "mov rax, 0x2000001\n"
@@ -185,7 +162,7 @@ AST_T* assembly_visit_function_definition(assembly_T* assembly, AST_T* node)
         add_to_main_section(node->function_definition_name);
         add_to_main_section(":\n");
 
-        assembly_visit(assembly, node->function_definition_body);
+        assembly_visit(assembly, node->function_definition_body, "NULL");
 
         add_to_main_section("ret\n\n");
     }
@@ -193,13 +170,73 @@ AST_T* assembly_visit_function_definition(assembly_T* assembly, AST_T* node)
     return node;
 }
 
-AST_T* assembly_visit_string(assembly_T* assembly, AST_T* node)
+int str_count = 0;
+AST_T* assembly_visit_string(assembly_T* assembly, AST_T* node, char* operation)
 {
+    if (strcmp(operation, "print") == 0)
+    {
+        add_to_main_section(
+            "mov rax, 0x2000004\n"
+            "mov rdi, 1\n"
+            "mov rsi, str_"
+        );
+        add_to_main_section(int_to_string(str_count));
+        add_to_main_section("\n");
+        add_to_main_section("mov rdx, str_");
+        add_to_main_section(int_to_string(str_count));
+        add_to_main_section(
+            "_len\n"
+            "syscall\n\n"
+        );
+        
+        // Data Section Assmebly
+        add_to_data_section("str_");
+        add_to_data_section(int_to_string(str_count));
+        add_to_data_section(" db \"");
+        add_to_data_section(node->string_value);
+        add_to_data_section("\", 0xa\n");
+        add_to_data_section("str_");
+        add_to_data_section(int_to_string(str_count));
+        add_to_data_section("_len: equ $ - ");
+        add_to_data_section("str_");
+        add_to_data_section(int_to_string(str_count));
+        add_to_data_section("\n");
+
+        str_count+=1;
+    }
+
     return node;
 }
 
-AST_T* assembly_visit_variable(assembly_T* assembly, AST_T* node)
+AST_T* assembly_visit_variable(assembly_T* assembly, AST_T* node, char* operation)
 {
+    AST_T* vdef = scope_get_variable_definition(
+        node->scope,
+        node->variable_name
+    );
+
+    if (strcmp(operation, "print") == 0)
+    {
+        add_to_main_section("mov rax, 0x2000004\n");
+        add_to_main_section("mov rdi, 1\n");
+        add_to_main_section("mov rsi, ");
+        add_to_main_section(node->variable_name);
+        add_to_main_section("\n");
+        add_to_main_section("mov rdx, ");
+        add_to_main_section(node->variable_name);
+        add_to_main_section("_len\n");
+        add_to_main_section("syscall\n\n");
+
+        return node;
+    }
+
+    if (vdef != (void*) 0)
+        return assembly_visit(assembly, vdef->variable_definition_value, "NULL");
+    
+    printf("\x1b[31m");
+    printf("Error: Undifined variable '%s'\n", node->variable_name);
+    exit(1);
+
     return node;
 }
 
@@ -207,7 +244,7 @@ AST_T* assembly_visit_compound(assembly_T* assembly, AST_T* node)
 {
     for (int i = 0; i < node->compound_size; i++)
     {
-        assembly_visit(assembly, node->compound_value[i]);
+        assembly_visit(assembly, node->compound_value[i], "NULL");
     }
 
     return init_ast(AST_NOOP);
