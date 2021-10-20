@@ -33,3 +33,14 @@ func main() {
     print("Hello World");
 }
 ```
+
+> Call Function
+```go
+func SampleFunc() {
+    print("Hello Sample Function");
+}
+
+func main() {
+    SampleFunc();
+}
+```
