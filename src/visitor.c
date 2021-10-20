@@ -64,7 +64,7 @@ AST_T* visitor_visit_function_call(visitor_T* visitor, AST_T* node)
     if (fdef == (void*) 0)
     {
         printf("\x1b[31m");
-        printf("Error: Undifined function %s\n", node->function_call_name);
+        printf("Error: Undefined function %s\n", node->function_call_name);
         exit(1);
     }
 
