@@ -29,7 +29,6 @@ void parser_eat(parser_T* parser, int token_type)
         int expectedTokenSpace = 0;
         int num = strlen(parser->prev_token->value) - 10;
 
-        printf("\x1b[31m");
         printf(
             "SyntaxError: Unexpected token '%s' (line %d)\n",
             parser->current_token->value,
@@ -45,7 +44,7 @@ void parser_eat(parser_T* parser, int token_type)
                 printf(" ");
             }
             printf(" ");
-            printf("         ↑\n");
+            printf("         ^\n");
             for (int i = 0; i < expectedTokenSpace; i++)
             {
                 printf(" ");
@@ -62,7 +61,7 @@ void parser_eat(parser_T* parser, int token_type)
                 printf(" ");
             }
             printf("%s\n", parser->prev_token->value);
-            printf("         ↑\n");
+            printf("         ^\n");
         }
         else
         {
@@ -241,7 +240,6 @@ AST_T* parser_parse_function_definition(parser_T* parser, scope_T* scope)
 
     if (parser->current_token->type == TOKEN_RBRACE)
     {
-        printf("\x1b[31m");
         printf("Syntax Error: function body is empty\n");
         exit(1);
     }
@@ -287,7 +285,6 @@ AST_T* parser_parse_variable_outside_func(parser_T* parser, scope_T* scope)
     }
 
     if (parser->current_token->type == TOKEN_LPAREN) {
-        printf("\x1b[31m");
         printf("Syntax Error: non-declaration statement outside function body\n");
         exit(1);
     }
