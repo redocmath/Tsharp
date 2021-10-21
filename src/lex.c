@@ -64,7 +64,7 @@ token_T* lexer_get_next_token(lexer_T* lexer)
             case '=': return lexer_advance_token(lexer, init_token(TOKEN_EQUAL, lexer_get_current_char_as_string(lexer))); break;
             case ';': return lexer_advance_token(lexer, init_token(TOKEN_SEMI, lexer_get_current_char_as_string(lexer))); break;
             case '\0': return init_token(TOKEN_EOF, "\0"); break;
-            default: printf("\x1b[31m"); printf("SyntaxError: Unexpected '%c' (line %d)\n", lexer->c, lexer->line_n); exit(1); break;
+            default: printf("SyntaxError: Unexpected '%c' (line %d)\n", lexer->c, lexer->line_n); exit(1); break;
         }
     }
 
