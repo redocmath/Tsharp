@@ -36,6 +36,7 @@ func main() {
 
 > Call Function
 ```go
+
 func SampleFunc() {
     print("Hello Sample Function");
 }
@@ -43,4 +44,15 @@ func SampleFunc() {
 func main() {
     SampleFunc();
 }
+
+```
+
+> Variable
+```go
+
+func main() {
+    language = "T#";
+    print(language);
+}
+
 ```
