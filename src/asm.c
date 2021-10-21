@@ -85,7 +85,6 @@ AST_T* assembly_visit(assembly_T* assembly, AST_T* node, char* operation)
         case AST_NOOP: return node; break;
     }
 
-    printf("\x1b[31m");
     printf("Error: Uncaught statement of type '%d'\n", node->type);
     exit(1);
 
@@ -233,7 +232,6 @@ AST_T* assembly_visit_variable(assembly_T* assembly, AST_T* node, char* operatio
     if (vdef != (void*) 0)
         return assembly_visit(assembly, vdef->variable_definition_value, "NULL");
     
-    printf("\x1b[31m");
     printf("Error: Undifined variable '%s'\n", node->variable_name);
     exit(1);
 
