@@ -25,12 +25,59 @@ void parser_eat(parser_T* parser, int token_type)
     }
     else
     {
+        int prevTokenSpace = 0;
+        int expectedTokenSpace = 0;
+        int num = strlen(parser->prev_token->value) - 10;
+
         printf("\x1b[31m");
         printf(
             "SyntaxError: Unexpected token '%s' (line %d)\n",
             parser->current_token->value,
             parser->lexer->line_n
         );
+
+        if (num > 0)
+        {
+            expectedTokenSpace = num;
+            printf("%s\n", parser->prev_token->value);
+            for (int i = 0; i < expectedTokenSpace; i++)
+            {
+                printf(" ");
+            }
+            printf(" ");
+            printf("         ↑\n");
+            for (int i = 0; i < expectedTokenSpace; i++)
+            {
+                printf(" ");
+            }
+            printf(" ");
+        }
+        else
+        if
+        (num < 0)
+        {
+            prevTokenSpace = num * -1;
+            for (int i = 1; i < prevTokenSpace; i++)
+            {
+                printf(" ");
+            }
+            printf("%s\n", parser->prev_token->value);
+            printf("         ↑\n");
+        }
+        else
+        {
+            printf("%s\n", parser->prev_token->value);
+            printf("         ↑\n");
+        }
+        switch (token_type)
+        {
+            case 3: printf("Expected (\n"); break;
+            case 4: printf("Expected )\n"); break;
+            case 5: printf("Expected {\n"); break;
+            case 6: printf("Expected }\n"); break;
+            case 7: printf("Expected =\n"); break;
+            case 8: printf("Expected ,\n"); break;
+        }
         exit(1);
     }
 }
