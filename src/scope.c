@@ -91,14 +91,17 @@ AST_T* scope_add_variable_definition(scope_T* scope, AST_T* vdef)
     return vdef;
 }
 
-AST_T* scope_get_variable_definition(scope_T* scope, const char* name)
+AST_T* scope_get_variable_definition(scope_T* scope, const char* name, const char* fname)
 {
     for (int i = 0; i < scope->variable_definitions_size; i++)
     {
         AST_T* vdef = scope->variable_definitions[i];
         if (strcmp(vdef->variable_definition_variable_name, name) == 0)
         {
-            return vdef;
+            if (strcmp(vdef->variable_definition_func_name, fname) == 0)
+            {
+                return vdef;
+            }
         }
     }
     return (void*) 0;
