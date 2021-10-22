@@ -15,18 +15,6 @@ $ sudo make install
 $ t# <filename>.t#
 ```
 
-> How to compile
-
-Rewrite the command written in the Tsharp/src/main.c file.
-
-```
-$ t# build <filename>.t#
-```
-
-```
-$ ./main
-```
-
 > Hello World
 ```go
 func main() {
@@ -34,25 +22,33 @@ func main() {
 }
 ```
 
-> Call Function
+> Function call
 ```go
-
 func SampleFunc() {
-    print("Hello Sample Function");
+    print("Function call!");
 }
 
 func main() {
     SampleFunc();
 }
-
 ```
 
 > Variable
 ```go
-
 func main() {
-    language = "T#";
-    print(language);
+    name = "T#";
+    print(name);
+}
+```
+
+> Call variables of other functions
+```go
+func SampleFunc() {
+    name = "T#";
 }
 
+func main() {
+    SampleFunc();
+    print(SampleFunc.name);
+}
 ```
