@@ -41,7 +41,7 @@ func main() {
 }
 ```
 
-> Call variables of other functions
+> Call variables from other functions
 ```go
 func SampleFunc() {
     name = "T#";
