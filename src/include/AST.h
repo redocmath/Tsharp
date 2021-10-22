@@ -19,6 +19,7 @@ typedef struct AST_STRUCT
     // AST_VARIABLE_DEFINITION
     char* variable_definition_variable_name;
     struct AST_STRUCT* variable_definition_value;
+    char* variable_definition_func_name;
 
     // AST_FUNCTION_DEFINITION
     struct AST_STRUCT* function_definition_body;
@@ -26,6 +27,7 @@ typedef struct AST_STRUCT
     
     // AST_VARIABLE
     char* variable_name;
+    char* variable_func_name;
 
     // AST_FUNCTION_CALL
     char* function_call_name;
