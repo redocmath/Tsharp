@@ -105,7 +105,8 @@ AST_T* visitor_visit_variable(visitor_T* visitor, AST_T* node)
 {
     AST_T* vdef = scope_get_variable_definition(
         node->scope,
-        node->variable_name
+        node->variable_name,
+        node->variable_func_name
     );
 
     if (vdef != (void*) 0)
