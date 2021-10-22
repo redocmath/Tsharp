@@ -1,12 +1,12 @@
 
-func test() {
-    print("Test Funciton");
+func Something() {
+    name = "T#";
+
+    print(name);
 }
 
 func main() {
-    test();
-    
-    print("Ibuki Yoshida");
-    print("Hello World");
-    print("Compiled!");
+    name = "Ibuki Yoshida";
+
+    print(name);
 }
