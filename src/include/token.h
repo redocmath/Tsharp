@@ -15,6 +15,7 @@ typedef struct TOKEN_STRUCT
         TOKEN_EQUAL, // =
         TOKEN_COMMA, // ,
         TOKEN_DOT, // .
+        TOKEN_INT, // 123
         TOKEN_EOF // End Of File
     } type;
 
