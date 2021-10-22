@@ -11,6 +11,7 @@ AST_T* init_ast(int type)
     // AST_VARIABLE_DEFINITION
     ast->variable_definition_variable_name = (void*) 0;
     ast->variable_definition_value = (void*) 0;
+    ast->variable_definition_func_name = (void*) 0;
 
     // AST_FUNCTION_DEFINITION
     ast->function_definition_body = (void*) 0;
@@ -18,6 +19,7 @@ AST_T* init_ast(int type)
 
     // AST_VARIABLE
     ast->variable_name = (void*) 0;
+    ast->variable_func_name = (void*) 0;
 
     // AST_FUNCTION_CALL
     ast->function_call_name = (void*) 0;
