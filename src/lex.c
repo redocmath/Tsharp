@@ -54,6 +54,11 @@ token_T* lexer_get_next_token(lexer_T* lexer)
             return lexer_collect_string(lexer);
         }
 
+        if (isdigit(lexer->c))
+        { 
+            return lexer_collect_int(lexer);
+        }
+
         switch (lexer->c)
         {
             case '.': return lexer_advance_token(lexer, init_token(TOKEN_DOT, lexer_get_current_char_as_string(lexer))); break;
@@ -92,6 +97,33 @@ token_T* lexer_collect_string(lexer_T* lexer)
     lexer_advance(lexer);
 
     return init_token(TOKEN_STRING, value);
+}
+
+token_T* lexer_collect_int(lexer_T* lexer)
+{
+    char* value = calloc(1, sizeof(char));
+
+    value[0] = '\0';
+    
+    while(isdigit(lexer->c))
+    {
+        if (isdigit(lexer->c))
+        {
+            char* s = lexer_get_current_char_as_string(lexer);
+            value = realloc(value, (strlen(value) + strlen(s) + 1) * sizeof(char));
+            strcat(value, s);
+
+            lexer_advance(lexer);
+        }
+        else
+        {
+            printf("\x1b[31m");
+            printf("ERROR: Expecting integer '%c' (line %d)\n", lexer->c, lexer->line_n);
+            exit(1);
+        }
+    }
+    
+    return init_token(TOKEN_INT, value);
 }
 
 token_T* lexer_collect_id(lexer_T* lexer)
