@@ -119,7 +119,7 @@ AST_T* parser_parse_statements(parser_T* parser, scope_T* scope)
     compound->compound_value[0] = ast_statement;
     compound->compound_size += 1;
 
-    while (parser->current_token->type == TOKEN_SEMI || parser->current_token->type == TOKEN_RBRACE)
+    while (parser->current_token->type == TOKEN_SEMI || parser->current_token->type == TOKEN_END)
     {
         if (parser->current_token->type == TOKEN_SEMI)
         {
@@ -127,7 +127,7 @@ AST_T* parser_parse_statements(parser_T* parser, scope_T* scope)
         }
         else
         {
-            parser_eat(parser, TOKEN_RBRACE);
+            parser_eat(parser, TOKEN_END);
         }
         
         AST_T* ast_statement = parser_parse_statement(parser, scope);
@@ -244,7 +244,7 @@ AST_T* parser_parse_function_definition(parser_T* parser, scope_T* scope)
     parser_eat(parser, TOKEN_LPAREN);
 
     parser_eat(parser, TOKEN_RPAREN);
-    parser_eat(parser, TOKEN_LBRACE);
+    parser_eat(parser, TOKEN_DO);
 
     if (parser->current_token->type == TOKEN_RBRACE)
     {
@@ -303,6 +303,33 @@ AST_T* parser_parse_variable(parser_T* parser, scope_T* scope, char* func_name)
         return parser_parse_compare(parser, scope, ast, func_name);
     }
 
+    return ast;
+}
+
+AST_T* parser_parse_if(parser_T* parser, scope_T* scope, char* func_name)
+{
+    AST_T* ast = init_ast(AST_IF);
+
+    parser_eat(parser, TOKEN_ID);
+
+    AST_T* op = parser_parse_expr_func_body(parser, scope, func_name);
+    ast->op = op;
+    parser_eat(parser, TOKEN_DO);
+
+    ast->if_body = parser_parse_statements_func_body(parser, scope, func_name);
+
+    if (parser->current_token->type == TOKEN_ELSE)
+    {
+        parser_eat(parser, TOKEN_ELSE);
+        ast->else_body = parser_parse_statements_func_body(parser, scope, func_name);
+        parser_eat(parser, TOKEN_END);
+    }
+    else
+    {
+        parser_eat(parser, TOKEN_END);
+    }
+
+    ast->scope = scope;
     return ast;
 }
 
@@ -410,5 +437,10 @@ AST_T* parser_parse_id(parser_T* parser, scope_T* scope)
 
 AST_T* parser_parse_id_func_body(parser_T* parser, scope_T* scope, char* func_name)
 {
+    if (strcmp(parser->current_token->value, "if") == 0)
+    {
+        return parser_parse_if(parser, scope, func_name);
+    }
+
     return parser_parse_variable(parser, scope, func_name);
 }
