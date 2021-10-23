@@ -37,6 +37,8 @@ AST_T* parser_parse_variable(parser_T* parser, scope_T* scope, char* func_name);
 
 AST_T* parser_parse_function_definition(parser_T* parser, scope_T* scope);
 
+AST_T* parser_parse_if(parser_T* parser, scope_T* scope, char* func_name);
+
 AST_T* parser_parse_compare(parser_T* parser, scope_T* scope, AST_T* left, char* func_name);
 
 AST_T* parser_parse_string(parser_T* parser, scope_T* scope, char* func_name);
