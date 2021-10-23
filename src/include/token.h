@@ -19,8 +19,11 @@ typedef struct TOKEN_STRUCT
         /* 11 */TOKEN_LESS_THAN,
         /* 12 */TOKEN_EQUALS,
         /* 13 */TOKEN_NOT_EQUALS,
-        /* 14 */TOKEN_INT, // 123
-        /* 15 */TOKEN_EOF // End Of File
+        /* 14 */TOKEN_END, // } -> end
+        /* 15 */TOKEN_DO, // { -> do
+        /* 16 */TOKEN_ELSE, // else
+        /* 17 */TOKEN_INT, // 123
+        /* 18 */TOKEN_EOF // End Of File
     } type;
 
     char* value;
