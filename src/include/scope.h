@@ -21,6 +21,8 @@ AST_T* scope_find_func(scope_T* scope, const char* name);
 
 AST_T* scope_add_variable_definition(scope_T* scope, AST_T* vdef);
 
+AST_T* scope_change_variable_definition(scope_T* scope, const char* name, const char* fname, AST_T* value);
+
 AST_T* scope_get_variable_definition(scope_T* scope, const char* name, const char* fname);
 
 #endif
