@@ -52,3 +52,26 @@ func main() do
     print(SampleFunc.name);
 end
 ```
+
+> If statement
+```pascal
+func main() do
+    if 10 == 10 do
+        print("Hello World!");
+    end
+
+    if 10 != 10 do
+        print("Hello World!");
+    else
+        print("T# Programming Language");
+    end
+
+    if 3 < 2 do
+        print("Hello World!");
+    end
+
+    if 3 > 2 do
+        print("Hello World!");
+    end
+end
+```
