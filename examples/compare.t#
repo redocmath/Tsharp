@@ -1,0 +1,9 @@
+
+func main() {
+    print(3 < 6);
+    print("Hello" != "World");
+    print(2 < 3);
+
+    num = 10;
+    print(num == 10);
+}
