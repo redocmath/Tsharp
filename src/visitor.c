@@ -21,6 +21,7 @@ AST_T* visitor_visit(visitor_T* visitor, AST_T* node)
         case AST_FUNCTION_CALL: return visitor_visit_function_call(visitor, node); break;
         case AST_VARIABLE: return visitor_visit_variable(visitor, node); break;
         case AST_STRING: return visitor_visit_string(visitor, node); break;
+        case AST_INT: return visitor_visit_int(visitor, node); break;
         case AST_COMPOUND: return visitor_visit_compound(visitor, node); break;
         case AST_NOOP: return node; break;
     }
@@ -40,6 +41,7 @@ static AST_T* builtin_function_print(visitor_T* visitor, AST_T** args, int args_
         switch (visited_ast->type)
         {
             case AST_STRING: printf("%s", visited_ast->string_value); break;
+            case AST_INT: printf("%ld", visited_ast->int_value); break;
             default: printf("%p", visited_ast); break;
         }
     }
@@ -100,6 +102,12 @@ AST_T* visitor_visit_string(visitor_T* visitor, AST_T* node)
 {
     return node;
 }
+
+AST_T* visitor_visit_int(visitor_T* visitor, AST_T* node)
+{
+    return node;
+}
+
 
 AST_T* visitor_visit_variable(visitor_T* visitor, AST_T* node)
 {
