@@ -19,6 +19,8 @@ AST_T* visitor_visit_function_definition(visitor_T* visitor, AST_T* node);
 
 AST_T* visitor_visit_string(visitor_T* visitor, AST_T* node);
 
+AST_T* visitor_visit_int(visitor_T* visitor, AST_T* node);
+
 AST_T* visitor_visit_variable(visitor_T* visitor, AST_T* node);
 
 AST_T* visitor_visit_compound(visitor_T* visitor, AST_T* node);
