@@ -9,6 +9,7 @@ typedef struct AST_STRUCT
         AST_FUNCTION_DEFINITION,
         AST_VARIABLE,
         AST_FUNCTION_CALL,
+        AST_COMPARE,
         AST_STRING,
         AST_INT,
         AST_COMPOUND,
@@ -34,6 +35,11 @@ typedef struct AST_STRUCT
     char* function_call_name;
     struct AST_STRUCT** args;
     size_t args_size;
+
+    // AST_COMPARE
+    struct AST_STRUCT* left;
+    struct AST_STRUCT* right;
+    int compare_op; 
 
     // AST_STRING
     char* string_value;
