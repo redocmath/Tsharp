@@ -183,21 +183,6 @@ AST_T* parser_parse_statements_func_body(parser_T* parser, scope_T* scope, char*
     return compound;
 }
 
-/*
-AST_T* parser_parse_expr(parser_T* parser, scope_T* scope)
-{
-    switch (parser->current_token->type)
-    {
-        case TOKEN_STRING: return parser_parse_string(parser, scope);
-        case TOKEN_INT: return parser_parse_int(parser, scope);
-        case TOKEN_ID: return parser_parse_id(parser, scope);
-        default: return 0;
-    }
-
-    return init_ast(AST_NOOP);
-}
-*/
-
 AST_T* parser_parse_expr_func_body(parser_T* parser, scope_T* scope, char* func_name)
 {
     switch (parser->current_token->type)
@@ -339,30 +324,6 @@ AST_T* parser_parse_compare(parser_T* parser, scope_T* scope, AST_T* left, char*
     return ast;
 }
 
-AST_T* parser_parse_variable_outside_func(parser_T* parser, scope_T* scope)
-{
-    char* token_value = parser->current_token->value;
-
-    parser_eat(parser, TOKEN_ID);
-
-    if (parser->current_token->type == TOKEN_EQUAL) {
-        printf("Syntax Error: non-declaration statement outside function body\n");
-        exit(1);
-    }
-
-    if (parser->current_token->type == TOKEN_LPAREN) {
-        printf("Syntax Error: non-declaration statement outside function body\n");
-        exit(1);
-    }
-
-    AST_T* ast = init_ast(AST_VARIABLE);
-    ast->variable_name = token_value;
-
-    ast->scope = scope;
-
-    return ast;
-}
-
 AST_T* parser_parse_string(parser_T* parser, scope_T* scope, char* func_name)
 {
     AST_T* ast_string = init_ast(AST_STRING);
@@ -445,7 +406,6 @@ AST_T* parser_parse_id(parser_T* parser, scope_T* scope)
     }
     printf("Syntax Error: non-declaration statement outside function body\n");
     exit(1);
-    return parser_parse_variable_outside_func(parser, scope);
 }
 
 AST_T* parser_parse_id_func_body(parser_T* parser, scope_T* scope, char* func_name)
