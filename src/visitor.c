@@ -20,6 +20,7 @@ AST_T* visitor_visit(visitor_T* visitor, AST_T* node)
         case AST_VARIABLE_DEFINITION: return visitor_visit_variable_definition(visitor, node); break;
         case AST_FUNCTION_CALL: return visitor_visit_function_call(visitor, node); break;
         case AST_VARIABLE: return visitor_visit_variable(visitor, node); break;
+        case AST_IF: return visitor_visit_if(visitor, node); break;
         case AST_COMPARE: return visitor_visit_compare(visitor, node); break;
         case AST_STRING: return visitor_visit_string(visitor, node); break;
         case AST_INT: return visitor_visit_int(visitor, node); break;
@@ -94,6 +95,22 @@ AST_T* visitor_visit_function_definition(visitor_T* visitor, AST_T* node)
     if (strcmp(node->function_definition_name, "main") == 0)
     {
         return visitor_visit(visitor, node->function_definition_body);
+    }
+
+    return node;
+}
+
+AST_T* visitor_visit_if(visitor_T* visitor, AST_T* node)
+{
+    AST_T* visited_ast = visitor_visit(visitor, node->op);
+    if (visited_ast->type == AST_INT && visited_ast->int_value == 1)
+    {
+        return visitor_visit(visitor, node->if_body);
+    }
+    
+    if (visited_ast->type == AST_INT && visited_ast->int_value == 0)
+    {
+        return visitor_visit(visitor, node->else_body);
     }
 
     return node;
