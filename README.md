@@ -16,14 +16,14 @@ $ t# <filename>.t#
 ```
 
 > Hello World
-```rb
+```pascal
 func main() do
     print("Hello World");
 end
 ```
 
 > Function call
-```rb
+```pascal
 func SampleFunc() do
     print("Function call!");
 end
@@ -42,7 +42,7 @@ end
 ```
 
 > Call variables from other functions
-```rb
+```pascal
 func SampleFunc() do
     name = "T#";
 end
