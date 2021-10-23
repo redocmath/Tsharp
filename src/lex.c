@@ -59,8 +59,49 @@ token_T* lexer_get_next_token(lexer_T* lexer)
             return lexer_collect_int(lexer);
         }
 
+        if (lexer->c == '=')
+        {
+            char* value = lexer_get_current_char_as_string(lexer);
+            lexer_advance(lexer);
+            if (lexer->c == '=')
+            {
+                value = realloc(value, strlen(value) + 2);
+                char* strchar = lexer_get_current_char_as_string(lexer);
+                strcat(value, strchar);
+                free(strchar);
+
+                return lexer_advance_token(lexer, init_token(TOKEN_EQUALS, value));
+            }
+            else
+            {
+                return lexer_advance_token(lexer, init_token(TOKEN_EQUAL, value)); break;
+            }
+        }
+
+        if (lexer->c == '!')
+        {
+            char* value = lexer_get_current_char_as_string(lexer);
+            lexer_advance(lexer);
+            if (lexer->c == '=')
+            {
+                value = realloc(value, strlen(value) + 2);
+                char* strchar = lexer_get_current_char_as_string(lexer);
+                strcat(value, strchar);
+                free(strchar);
+
+                return lexer_advance_token(lexer, init_token(TOKEN_NOT_EQUALS, value));
+            }
+            else
+            {
+                printf("SyntaxError: Unexpected '%c' (line %d)\n", lexer->c, lexer->line_n);
+                exit(1);
+            }
+        }
+
         switch (lexer->c)
         {
+            case '>': return lexer_advance_token(lexer, init_token(TOKEN_GREATER_THAN, lexer_get_current_char_as_string(lexer))); break;
+            case '<': return lexer_advance_token(lexer, init_token(TOKEN_LESS_THAN, lexer_get_current_char_as_string(lexer))); break;
             case '.': return lexer_advance_token(lexer, init_token(TOKEN_DOT, lexer_get_current_char_as_string(lexer))); break;
             case ',': return lexer_advance_token(lexer, init_token(TOKEN_COMMA, lexer_get_current_char_as_string(lexer))); break;
             case '{': return lexer_advance_token(lexer, init_token(TOKEN_LBRACE, lexer_get_current_char_as_string(lexer))); break;
