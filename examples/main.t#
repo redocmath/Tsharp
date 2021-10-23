@@ -1,13 +1,13 @@
 
-func Something() {
+func Something() do
     name = "T#";
     print(name);
-}
+end
 
-func main() {
+func main() do
     name = "Ibuki Yoshida";
     print(name);
     
     number = 10;
     print(number);
-}
+end
