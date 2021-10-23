@@ -183,6 +183,7 @@ AST_T* parser_parse_statements_func_body(parser_T* parser, scope_T* scope, char*
     return compound;
 }
 
+/*
 AST_T* parser_parse_expr(parser_T* parser, scope_T* scope)
 {
     switch (parser->current_token->type)
@@ -195,13 +196,14 @@ AST_T* parser_parse_expr(parser_T* parser, scope_T* scope)
 
     return init_ast(AST_NOOP);
 }
+*/
 
 AST_T* parser_parse_expr_func_body(parser_T* parser, scope_T* scope, char* func_name)
 {
     switch (parser->current_token->type)
     {
-        case TOKEN_STRING: return parser_parse_string(parser, scope);
-        case TOKEN_INT: return parser_parse_int(parser, scope);
+        case TOKEN_STRING: return parser_parse_string(parser, scope, func_name);
+        case TOKEN_INT: return parser_parse_int(parser, scope, func_name);
         case TOKEN_ID: return parser_parse_id_func_body(parser, scope, func_name);
         default: return 0;
     }
@@ -301,7 +303,6 @@ AST_T* parser_parse_variable(parser_T* parser, scope_T* scope, char* func_name)
         ast->variable_name = variable_name;
 
         ast->scope = scope;
-        return ast;
     }
     else
     {
@@ -310,9 +311,31 @@ AST_T* parser_parse_variable(parser_T* parser, scope_T* scope, char* func_name)
         ast->variable_name = token_value;
 
         ast->scope = scope;
-        return ast;
     }
 
+    if (parser->current_token->type == TOKEN_EQUALS || parser->current_token->type == TOKEN_NOT_EQUALS || parser->current_token->type == TOKEN_GREATER_THAN || parser->current_token->type == TOKEN_LESS_THAN)
+    {
+        return parser_parse_compare(parser, scope, ast, func_name);
+    }
+
+    return ast;
+}
+
+AST_T* parser_parse_compare(parser_T* parser, scope_T* scope, AST_T* left, char* func_name)
+{
+    AST_T* ast = init_ast(AST_COMPARE);
+
+    ast->left = left;
+
+    ast->compare_op = parser->current_token->type;
+
+    parser_eat(parser, parser->current_token->type);
+
+    AST_T* right = parser_parse_expr_func_body(parser, scope, func_name);
+
+    ast->right = right;
+
+    ast->scope = scope;
     return ast;
 }
 
@@ -340,7 +363,7 @@ AST_T* parser_parse_variable_outside_func(parser_T* parser, scope_T* scope)
     return ast;
 }
 
-AST_T* parser_parse_string(parser_T* parser, scope_T* scope)
+AST_T* parser_parse_string(parser_T* parser, scope_T* scope, char* func_name)
 {
     AST_T* ast_string = init_ast(AST_STRING);
     ast_string->string_value = parser->current_token->value;
@@ -349,10 +372,15 @@ AST_T* parser_parse_string(parser_T* parser, scope_T* scope)
 
     ast_string->scope = scope;
 
+    if (parser->current_token->type == TOKEN_EQUALS || parser->current_token->type == TOKEN_NOT_EQUALS || parser->current_token->type == TOKEN_GREATER_THAN || parser->current_token->type == TOKEN_LESS_THAN)
+    {
+        return parser_parse_compare(parser, scope, ast_string, func_name);
+    }
+
     return ast_string;
 }
 
-AST_T* parser_parse_int(parser_T* parser, scope_T* scope)
+AST_T* parser_parse_int(parser_T* parser, scope_T* scope, char* func_name)
 {
     char* endPtr;
     long int int_value = strtol(parser->current_token->value, &endPtr, 10);
@@ -362,7 +390,12 @@ AST_T* parser_parse_int(parser_T* parser, scope_T* scope)
     ast_int->int_value = int_value;
 
     ast_int->scope = scope;
-    
+
+    if (parser->current_token->type == TOKEN_EQUALS || parser->current_token->type == TOKEN_NOT_EQUALS || parser->current_token->type == TOKEN_GREATER_THAN || parser->current_token->type == TOKEN_LESS_THAN)
+    {
+        return parser_parse_compare(parser, scope, ast_int, func_name);
+    }
+
     return ast_int;
 }
 
