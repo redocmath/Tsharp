@@ -77,6 +77,23 @@ AST_T* visitor_visit_function_call(visitor_T* visitor, AST_T* node)
 
 AST_T* visitor_visit_variable_definition(visitor_T* visitor, AST_T* node)
 {
+    AST_T* vdef = scope_get_variable_definition(
+        node->scope,
+        node->variable_definition_variable_name,
+        node->variable_definition_func_name
+    );
+
+    if (vdef != (void*) 0)
+    {
+        scope_change_variable_definition(
+            node->scope,
+            node->variable_definition_variable_name,
+            node->variable_definition_func_name,
+            node->variable_definition_value
+        );
+        return node;
+    }
+
     scope_add_variable_definition(
         node->scope,
         node
