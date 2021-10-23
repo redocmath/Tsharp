@@ -182,6 +182,21 @@ token_T* lexer_collect_id(lexer_T* lexer)
         lexer_advance(lexer);
     }
 
+    if (strcmp(value, "end") == 0)
+    {
+        return init_token(TOKEN_END, value);
+    }
+
+    if (strcmp(value, "do") == 0)
+    {
+        return init_token(TOKEN_DO, value);
+    }
+
+    if (strcmp(value, "else") == 0)
+    {
+        return init_token(TOKEN_ELSE, value);
+    }
+
     return init_token(TOKEN_ID, value);
 }
 
