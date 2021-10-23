@@ -16,39 +16,39 @@ $ t# <filename>.t#
 ```
 
 > Hello World
-```go
-func main() {
+```rb
+func main() do
     print("Hello World");
-}
+end
 ```
 
 > Function call
-```go
-func SampleFunc() {
+```rb
+func SampleFunc() do
     print("Function call!");
-}
+end
 
-func main() {
+func main() do
     SampleFunc();
-}
+end
 ```
 
 > Variable
-```go
-func main() {
+```pascal
+func main() do
     name = "T#";
     print(name);
-}
+end
 ```
 
 > Call variables from other functions
-```go
-func SampleFunc() {
+```rb
+func SampleFunc() do
     name = "T#";
-}
+end
 
-func main() {
+func main() do
     SampleFunc();
     print(SampleFunc.name);
-}
+end
 ```
