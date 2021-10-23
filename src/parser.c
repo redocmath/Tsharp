@@ -188,6 +188,7 @@ AST_T* parser_parse_expr(parser_T* parser, scope_T* scope)
     switch (parser->current_token->type)
     {
         case TOKEN_STRING: return parser_parse_string(parser, scope);
+        case TOKEN_INT: return parser_parse_int(parser, scope);
         case TOKEN_ID: return parser_parse_id(parser, scope);
         default: return 0;
     }
@@ -200,6 +201,7 @@ AST_T* parser_parse_expr_func_body(parser_T* parser, scope_T* scope, char* func_
     switch (parser->current_token->type)
     {
         case TOKEN_STRING: return parser_parse_string(parser, scope);
+        case TOKEN_INT: return parser_parse_int(parser, scope);
         case TOKEN_ID: return parser_parse_id_func_body(parser, scope, func_name);
         default: return 0;
     }
@@ -350,6 +352,20 @@ AST_T* parser_parse_string(parser_T* parser, scope_T* scope)
     return ast_string;
 }
 
+AST_T* parser_parse_int(parser_T* parser, scope_T* scope)
+{
+    char* endPtr;
+    long int int_value = strtol(parser->current_token->value, &endPtr, 10);
+    
+    parser_eat(parser, TOKEN_INT);
+    AST_T* ast_int = init_ast(AST_INT);
+    ast_int->int_value = int_value;
+
+    ast_int->scope = scope;
+    
+    return ast_int;
+}
+
 AST_T* parser_parse_function_call(parser_T* parser, scope_T* scope, char* func_name){
     AST_T* ast = init_ast(AST_FUNCTION_CALL);
 
@@ -400,11 +416,6 @@ AST_T* parser_parse_id(parser_T* parser, scope_T* scope)
 }
 
 AST_T* parser_parse_id_func_body(parser_T* parser, scope_T* scope, char* func_name)
-{   /*
-    if (strcmp(parser->current_token->value, "func") == 0)
-    {
-        return parser_parse_function_definition(parser, scope);
-    }
-    */
+{
     return parser_parse_variable(parser, scope, func_name);
 }
