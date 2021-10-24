@@ -80,4 +80,4 @@ end
 
 ### Vim Syntax Highlighting
 
-- <a href="https://github.com/ibukiyoshidaa/Tsharp/editor/tsharp.vim">Vim</a>
+- <a href="https://github.com/ibukiyoshidaa/Tsharp/blob/main/editor/tsharp.vim">Vim</a>
