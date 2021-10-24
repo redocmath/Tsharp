@@ -11,6 +11,7 @@ typedef struct AST_STRUCT
         AST_FUNCTION_CALL,
         AST_IF,
         AST_COMPARE,
+        AST_WHILE,
         AST_STRING,
         AST_INT,
         AST_COMPOUND,
@@ -45,7 +46,10 @@ typedef struct AST_STRUCT
     // AST_COMPARE
     struct AST_STRUCT* left;
     struct AST_STRUCT* right;
-    int compare_op; 
+    int compare_op;
+
+    //AST_WHILE
+    struct AST_STRUCT* while_body;
 
     // AST_STRING
     char* string_value;
