@@ -78,6 +78,16 @@ func main() do
 end
 ```
 
+> While loop
+```pascal
+func main() do
+	num = 1;
+	while num < 10 do
+		print("Hello World");
+	end
+end
+```
+
 ### Vim Syntax Highlighting
 
 - <a href="https://github.com/ibukiyoshidaa/Tsharp/blob/main/editor/tsharp.vim">Vim</a>
