@@ -41,6 +41,8 @@ AST_T* parser_parse_if(parser_T* parser, scope_T* scope, char* func_name);
 
 AST_T* parser_parse_compare(parser_T* parser, scope_T* scope, AST_T* left, char* func_name);
 
+AST_T* parser_parse_while(parser_T* parser, scope_T* scope, char* func_name);
+
 AST_T* parser_parse_string(parser_T* parser, scope_T* scope, char* func_name);
 
 AST_T* parser_parse_int(parser_T* parser, scope_T* scope, char* func_name);
