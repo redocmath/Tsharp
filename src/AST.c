@@ -36,6 +36,9 @@ AST_T* init_ast(int type)
     ast->right = (void*) 0;
     ast->compare_op = 0;
 
+    // AST_WHILE
+    ast->while_body = (void*) 0;
+
     // AST_STRING
     ast->string_value = (void*) 0;
 
