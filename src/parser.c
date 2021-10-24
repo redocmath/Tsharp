@@ -351,6 +351,18 @@ AST_T* parser_parse_compare(parser_T* parser, scope_T* scope, AST_T* left, char*
     return ast;
 }
 
+AST_T* parser_parse_while(parser_T* parser, scope_T* scope, char* func_name)
+{
+    AST_T* ast = init_ast(AST_WHILE);
+    parser_eat(parser, TOKEN_ID);
+    ast->op = parser_parse_expr_func_body(parser, scope, func_name);
+    parser_eat(parser, TOKEN_DO);
+    ast->while_body = parser_parse_statements_func_body(parser, scope, func_name);
+    parser_eat(parser, TOKEN_END);
+    ast->scope = scope;
+    return ast;
+}
+
 AST_T* parser_parse_string(parser_T* parser, scope_T* scope, char* func_name)
 {
     AST_T* ast_string = init_ast(AST_STRING);
@@ -440,6 +452,11 @@ AST_T* parser_parse_id_func_body(parser_T* parser, scope_T* scope, char* func_na
     if (strcmp(parser->current_token->value, "if") == 0)
     {
         return parser_parse_if(parser, scope, func_name);
+    }
+
+    if (strcmp(parser->current_token->value, "while") == 0)
+    {
+        return parser_parse_while(parser, scope, func_name);
     }
 
     return parser_parse_variable(parser, scope, func_name);
