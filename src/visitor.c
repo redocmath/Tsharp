@@ -22,6 +22,7 @@ AST_T* visitor_visit(visitor_T* visitor, AST_T* node)
         case AST_VARIABLE: return visitor_visit_variable(visitor, node); break;
         case AST_IF: return visitor_visit_if(visitor, node); break;
         case AST_COMPARE: return visitor_visit_compare(visitor, node); break;
+        case AST_WHILE: return visitor_visit_while(visitor, node); break;
         case AST_STRING: return visitor_visit_string(visitor, node); break;
         case AST_INT: return visitor_visit_int(visitor, node); break;
         case AST_COMPOUND: return visitor_visit_compound(visitor, node); break;
@@ -248,6 +249,23 @@ AST_T* visitor_visit_compare(visitor_T* visitor, AST_T* node)
     ast_int->int_value = value;
 
     return ast_int;
+}
+
+AST_T* visitor_visit_while(visitor_T* visitor, AST_T* node)
+{
+    AST_T* visited_op = visitor_visit(visitor, node->op);
+
+    if (visited_op->type != AST_INT)
+    {
+        printf("ERROR: while loop unexpected value\n");
+        exit(1);
+    }
+
+    while (visited_op->int_value) {
+        visitor_visit(visitor, node->while_body);
+    }
+
+    return node;
 }
 
 AST_T* visitor_visit_string(visitor_T* visitor, AST_T* node)
