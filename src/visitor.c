@@ -261,10 +261,16 @@ AST_T* visitor_visit_while(visitor_T* visitor, AST_T* node)
         exit(1);
     }
 
-    while (visited_op->int_value) {
-        visitor_visit(visitor, node->while_body);
+    while (1) {
+        if (visited_op->int_value == 1)
+        {
+            visitor_visit(visitor, node->while_body);
+        }
+        else
+        {
+            return node;
+        }
     }
-
     return node;
 }
 
