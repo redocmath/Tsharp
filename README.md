@@ -5,6 +5,8 @@
 
 WARNING! THIS LANGUAGE IS A WORK IN PROGRESS! ANYTHING CAN CHANGE AT ANY MOMENT WITHOUT ANY NOTICE!
 
+### Install & Run
+
 > Install
 ```
 $ sudo make install
@@ -75,3 +77,7 @@ func main() do
     end
 end
 ```
+
+### Vim Syntax Highlighting
+
+- <a href="https://github.com/ibukiyoshidaa/Tsharp/blob/main/editor/tsharp.vim">Vim</a>
