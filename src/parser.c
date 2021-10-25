@@ -107,16 +107,11 @@ AST_T* parser_parse_statements(parser_T* parser, scope_T* scope, char* func_name
 
     compound->compound_value[0] = ast_statement;
     compound->compound_size += 1;
-    while ((parser->prev_token->type != TOKEN_COLON && parser->current_token->type == TOKEN_SEMI) || (parser->current_token->type == TOKEN_END && parser->prev_token->type == TOKEN_COLON))
+    //while ((parser->prev_token->type != TOKEN_COLON && parser->current_token->type == TOKEN_SEMI) || (parser->current_token->type == TOKEN_END && parser->prev_token->type == TOKEN_COLON))
+    while(parser->current_token->type == TOKEN_SEMI)
     {
         if (parser->current_token->type == TOKEN_SEMI)
-        {
             parser_eat(parser, TOKEN_SEMI);
-        }
-        else
-        {
-            parser_eat(parser, TOKEN_END);
-        }
         
         AST_T* ast_statement = parser_parse_statement(parser, scope, func_name);
 
@@ -258,7 +253,7 @@ AST_T* parser_parse_function_definition(parser_T* parser, scope_T* scope)
     parser_eat(parser, TOKEN_RPAREN);
     parser_eat(parser, TOKEN_DO);
 
-    if (parser->current_token->type == TOKEN_COLON)
+    if (parser->current_token->type == TOKEN_END)
     {
         printf("SyntaxError: function body is empty (line %d)\n", parser->lexer->line_n);
         exit(1);
@@ -266,7 +261,7 @@ AST_T* parser_parse_function_definition(parser_T* parser, scope_T* scope)
 
     ast->function_definition_body = parser_parse_statements(parser, scope, function_name);
 
-    parser_eat(parser, TOKEN_COLON);
+    parser_eat(parser, TOKEN_END);
 
     ast->scope = scope;
 
@@ -339,7 +334,7 @@ AST_T* parser_parse_if(parser_T* parser, scope_T* scope, char* func_name)
     ast->op = op;
     parser_eat(parser, TOKEN_DO);
 
-    if (parser->current_token->type == TOKEN_COLON)
+    if (parser->current_token->type == TOKEN_END)
     {
         printf(
             "SyntaxError: if body is empty (line %d)\n",
@@ -355,7 +350,7 @@ AST_T* parser_parse_if(parser_T* parser, scope_T* scope, char* func_name)
         parser_eat(parser, TOKEN_ELSE);
         ast->else_body = parser_parse_statements(parser, scope, func_name);
     }
-    parser_eat(parser, TOKEN_COLON);
+    parser_eat(parser, TOKEN_END);
 
     ast->scope = scope;
     return ast;
@@ -385,13 +380,13 @@ AST_T* parser_parse_while(parser_T* parser, scope_T* scope, char* func_name)
     parser_eat(parser, TOKEN_ID);
     ast->op = parser_parse_expr(parser, scope, func_name);
     parser_eat(parser, TOKEN_DO);
-    if (parser->current_token->type == TOKEN_COLON)
+    if (parser->current_token->type == TOKEN_END)
     {
         printf("SyntaxError: while body is empty (line %d)\n", parser->lexer->line_n);
         exit(1);
     }
     ast->while_body = parser_parse_statements(parser, scope, func_name);
-    parser_eat(parser, TOKEN_COLON);
+    parser_eat(parser, TOKEN_END);
     ast->scope = scope;
     return ast;
 }
