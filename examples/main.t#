@@ -1,10 +1,12 @@
 
-func Something() do
+func Something(name, age) do
     num = 10;
+    print(name);
+    print(age);
 end;
 
 func main() do
-    Something();
+    Something("Ibuki", 17);
     
     if Something.num == 10 do
         print("num is 10!");
