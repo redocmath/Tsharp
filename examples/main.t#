@@ -1,13 +1,14 @@
 
 func Something() do
-    name = "T#";
-    print(name);
-end
+    num = 10;
+:end
 
 func main() do
-    name = "Ibuki Yoshida";
-    print(name);
+    Something();
     
-    number = 10;
-    print(number);
-end
+    if Something.num == 10 do
+        print("num is 10!");
+    :end
+
+    print("Hello World");
+:end

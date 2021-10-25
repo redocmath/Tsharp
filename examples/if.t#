@@ -1,13 +1,12 @@
 
-func test() do
-	text = "T# Programming Language";
-    print(text);
-end
-
 func main() do
-	if 2 != 2 do
-		print("Hello 2");
+    if true do
+		print(true);
+	:end
+
+	if false do
+		print(false);
 	else
-        print(1000);
-    end
-end
+		print(true);
+	:end
+:end
