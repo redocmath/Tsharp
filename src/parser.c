@@ -233,6 +233,44 @@ AST_T* parser_parse_variable_definition(parser_T* parser, scope_T* scope, char* 
     return ast;
 }
 
+AST_T* parser_parse_variable_update_value_from_other_func(parser_T* parser, scope_T* scope, char* func_name, char* variable_name)
+{
+    AST_T* ast = init_ast(AST_VARIABLE_DEFINITION);
+
+    ast->variable_definition_variable_name = calloc(
+        strlen(variable_name) + 1,
+        sizeof(char)
+    );
+
+    strcpy(ast->variable_definition_variable_name, variable_name);
+
+    ast->variable_definition_func_name = calloc(
+        strlen(func_name) + 1,
+        sizeof(char)
+    );
+
+    strcpy(ast->variable_definition_func_name, func_name);
+
+    parser_eat(parser, TOKEN_EQUAL);
+
+    AST_T* variable_definition_value = parser_parse_expr(parser, scope, func_name);
+    ast->variable_definition_value = variable_definition_value;
+
+    if (parser->current_token->type == TOKEN_COLON)
+    {
+        printf(
+            "SyntaxError: Unexpected token '%s' (line %d)\n",
+            parser->current_token->value,
+            parser->lexer->line_n
+        );
+        exit(1);
+    }
+
+    ast->scope = scope;
+
+    return ast;
+}
+
 AST_T* parser_parse_function_definition(parser_T* parser, scope_T* scope)
 {
     AST_T* ast = init_ast(AST_FUNCTION_DEFINITION);
@@ -293,13 +331,14 @@ AST_T* parser_parse_variable(parser_T* parser, scope_T* scope, char* func_name)
     }
 
     AST_T* ast = init_ast(AST_VARIABLE);
-
+    
+    char* variable_name;
     if (parser->current_token->type == TOKEN_DOT)
     {
         ast->variable_func_name = token_value;
         parser_eat(parser, TOKEN_DOT);
 
-        char* variable_name = parser->current_token->value;
+        variable_name = parser->current_token->value;
 
         parser_eat(parser, TOKEN_ID);
 
@@ -314,6 +353,11 @@ AST_T* parser_parse_variable(parser_T* parser, scope_T* scope, char* func_name)
         ast->variable_name = token_value;
 
         ast->scope = scope;
+    }
+
+    if (parser->current_token->type == TOKEN_EQUAL)
+    {
+        return parser_parse_variable_update_value_from_other_func(parser, scope, token_value, variable_name);
     }
 
     if (parser->current_token->type == TOKEN_EQUALS || parser->current_token->type == TOKEN_NOT_EQUALS || parser->current_token->type == TOKEN_GREATER_THAN || parser->current_token->type == TOKEN_LESS_THAN)
