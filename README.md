@@ -21,18 +21,18 @@ $ t# <filename>.t#
 ```pascal
 func main() do
     print("Hello World");
-:end
+end;
 ```
 
 > Function call
 ```pascal
 func SampleFunc() do
     print("Function call!");
-:end
+end;
 
 func main() do
     SampleFunc();
-:end
+end;
 ```
 
 > Variable
@@ -40,19 +40,19 @@ func main() do
 func main() do
     name = "T#";
     print(name);
-:end
+end;
 ```
 
 > Call variables from other functions
 ```pascal
 func SampleFunc() do
     name = "T#";
-:end
+end;
 
 func main() do
     SampleFunc();
     print(SampleFunc.name);
-:end
+end;
 ```
 
 > If statement
@@ -60,22 +60,22 @@ func main() do
 func main() do
     if 10 == 10 do
         print("Hello World!");
-    :end
+    end;
 
     if 10 != 10 do
         print("Hello World!");
     else
         print("T# Programming Language");
-    :end
+    end;
 
     if 3 < 2 do
         print("Hello World!");
-    :end
+    end;
 
     if 3 > 2 do
         print("Hello World!");
-    :end
-:end
+    end;
+end;
 ```
 
 > While loop
