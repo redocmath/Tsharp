@@ -6,4 +6,4 @@ func main() do
 
     num = 10;
     print(num == 10);
-:end
+end;

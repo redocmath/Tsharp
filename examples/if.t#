@@ -2,15 +2,15 @@
 func main() do
     if true do
 		print(true);
-	:end
+	end;
 
 	if false do
 		print(false);
 	else
 		print(true);
-	:end
+	end;
 
 	if false do
 		print(false);
-	:end
-:end
+	end;
+end;

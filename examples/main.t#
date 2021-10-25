@@ -1,14 +1,14 @@
 
 func Something() do
     num = 10;
-:end
+end;
 
 func main() do
     Something();
     
     if Something.num == 10 do
         print("num is 10!");
-    :end
+    end;
 
     print("Hello World");
-:end
+end;
