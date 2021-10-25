@@ -45,6 +45,9 @@ AST_T* init_ast(int type)
     // AST_INT
     ast->int_value = 0;
 
+    // AST_BOOL
+    ast->bool_value = (void*) 0;
+
     // AST_COMPOUND
     ast->compound_value = (void*) 0;
     ast->compound_size = 0;

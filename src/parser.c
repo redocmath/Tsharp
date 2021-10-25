@@ -83,43 +83,31 @@ void parser_eat(parser_T* parser, int token_type)
 
 AST_T* parser_parse(parser_T* parser, scope_T* scope)
 {
-    return parser_parse_statements(parser, scope);
+    return parser_parse_statements(parser, scope, "");
 }
 
-AST_T* parser_parse_statement(parser_T* parser, scope_T* scope)
+AST_T* parser_parse_statement(parser_T* parser, scope_T* scope, char* func_name)
 {
     switch (parser->current_token->type)
     {
-        case TOKEN_ID: return parser_parse_id(parser, scope);
+        case TOKEN_ID: return parser_parse_id(parser, scope, func_name);
         default: return 0;
     }
 
     return init_ast(AST_NOOP);
 }
 
-AST_T* parser_parse_statement_func_body(parser_T* parser, scope_T* scope, char* func_name)
-{
-    switch (parser->current_token->type)
-    {
-        case TOKEN_ID: return parser_parse_id_func_body(parser, scope, func_name);
-        default: return 0;
-    }
-
-    return init_ast(AST_NOOP);
-}
-
-AST_T* parser_parse_statements(parser_T* parser, scope_T* scope)
+AST_T* parser_parse_statements(parser_T* parser, scope_T* scope, char* func_name)
 {
     AST_T* compound = init_ast(AST_COMPOUND);
 
     compound->compound_value = calloc(1, sizeof(struct AST_STRUCT*));
 
-    AST_T* ast_statement = parser_parse_statement(parser, scope);
+    AST_T* ast_statement = parser_parse_statement(parser, scope, func_name);
 
     compound->compound_value[0] = ast_statement;
     compound->compound_size += 1;
-
-    while (parser->current_token->type == TOKEN_SEMI || parser->current_token->type == TOKEN_END)
+    while ((parser->prev_token->type != TOKEN_COLON && parser->current_token->type == TOKEN_SEMI) || (parser->current_token->type == TOKEN_END && parser->prev_token->type == TOKEN_COLON))
     {
         if (parser->current_token->type == TOKEN_SEMI)
         {
@@ -130,7 +118,7 @@ AST_T* parser_parse_statements(parser_T* parser, scope_T* scope)
             parser_eat(parser, TOKEN_END);
         }
         
-        AST_T* ast_statement = parser_parse_statement(parser, scope);
+        AST_T* ast_statement = parser_parse_statement(parser, scope, func_name);
 
         if (ast_statement)
         {
@@ -145,55 +133,69 @@ AST_T* parser_parse_statements(parser_T* parser, scope_T* scope)
     }
 
     compound->scope = scope;
-
     return compound;
 }
 
-AST_T* parser_parse_statements_func_body(parser_T* parser, scope_T* scope, char* func_name)
-{
-    AST_T* compound = init_ast(AST_COMPOUND);
-
-    compound->compound_value = calloc(1, sizeof(struct AST_STRUCT*));
-
-    AST_T* ast_statement = parser_parse_statement_func_body(parser, scope, func_name);
-
-    compound->compound_value[0] = ast_statement;
-    compound->compound_size += 1;
-
-    while (parser->current_token->type == TOKEN_SEMI)
-    {
-        parser_eat(parser, TOKEN_SEMI);
-        
-        AST_T* ast_statement = parser_parse_statement_func_body(parser, scope, func_name);
-
-        if (ast_statement)
-        {
-            compound->compound_size += 1;
-
-            compound->compound_value = realloc(
-                compound->compound_value,
-                compound->compound_size * sizeof(struct AST_STRUCT)
-            );
-            compound->compound_value[compound->compound_size-1] = ast_statement;
-        }
-    }
-
-    compound->scope = scope;
-
-    return compound;
-}
-
-AST_T* parser_parse_expr_func_body(parser_T* parser, scope_T* scope, char* func_name)
+AST_T* parser_parse_expr(parser_T* parser, scope_T* scope, char* func_name)
 {
     switch (parser->current_token->type)
     {
         case TOKEN_STRING: return parser_parse_string(parser, scope, func_name);
         case TOKEN_INT: return parser_parse_int(parser, scope, func_name);
-        case TOKEN_ID: return parser_parse_id_func_body(parser, scope, func_name);
+        case TOKEN_BOOL: return parser_parse_bool(parser, scope, func_name);
+        case TOKEN_ID: return parser_parse_id(parser, scope, func_name);
         default: return 0;
     }
 
     return init_ast(AST_NOOP);
+}
+
+AST_T* parser_parse_function_call(parser_T* parser, scope_T* scope, char* func_name){
+    AST_T* ast = init_ast(AST_FUNCTION_CALL);
+
+    ast->function_call_name = parser->prev_token->value;
+
+    parser_eat(parser, TOKEN_LPAREN);
+
+    ast->args = calloc(1, sizeof(struct AST_STRUCT*));
+    
+    if (parser->current_token->type != TOKEN_RPAREN)
+    {
+        AST_T* ast_expr = parser_parse_expr(parser, scope, func_name);
+        ast->args[0] = ast_expr;
+        ast->args_size += 1;
+    }
+
+    while (parser->current_token->type == TOKEN_COMMA)
+    {
+        parser_eat(parser, TOKEN_COMMA);
+        
+        AST_T* ast_expr = parser_parse_expr(parser, scope, func_name);
+        
+        ast->args_size += 1;
+
+        ast->args = realloc(
+            ast->args,
+            ast->args_size * sizeof(struct AST_STRUCT)
+        );
+        ast->args[ast->args_size-1] = ast_expr;
+    }
+
+    parser_eat(parser, TOKEN_RPAREN);
+
+    if (parser->current_token->type == TOKEN_COLON)
+    {
+        printf(
+            "SyntaxError: Unexpected token '%s' (line %d)\n",
+            parser->current_token->value,
+            parser->lexer->line_n
+        );
+        exit(1);
+    }
+
+    ast->scope = scope;
+
+    return ast;
 }
 
 AST_T* parser_parse_variable_definition(parser_T* parser, scope_T* scope, char* func_name)
@@ -218,8 +220,18 @@ AST_T* parser_parse_variable_definition(parser_T* parser, scope_T* scope, char* 
 
     parser_eat(parser, TOKEN_EQUAL);
 
-    AST_T* variable_definition_value = parser_parse_expr_func_body(parser, scope, func_name);
+    AST_T* variable_definition_value = parser_parse_expr(parser, scope, func_name);
     ast->variable_definition_value = variable_definition_value;
+
+    if (parser->current_token->type == TOKEN_COLON)
+    {
+        printf(
+            "SyntaxError: Unexpected token '%s' (line %d)\n",
+            parser->current_token->value,
+            parser->lexer->line_n
+        );
+        exit(1);
+    }
 
     ast->scope = scope;
 
@@ -246,19 +258,20 @@ AST_T* parser_parse_function_definition(parser_T* parser, scope_T* scope)
     parser_eat(parser, TOKEN_RPAREN);
     parser_eat(parser, TOKEN_DO);
 
-    if (parser->current_token->type == TOKEN_RBRACE)
+    if (parser->current_token->type == TOKEN_COLON)
     {
         printf("Syntax Error: function body is empty\n");
         exit(1);
     }
 
-    ast->function_definition_body = parser_parse_statements_func_body(parser, scope, function_name);
+    ast->function_definition_body = parser_parse_statements(parser, scope, function_name);
+
+    parser_eat(parser, TOKEN_COLON);
 
     ast->scope = scope;
 
     return ast;
 }
-
 
 AST_T* parser_parse_variable(parser_T* parser, scope_T* scope, char* func_name)
 {
@@ -267,10 +280,20 @@ AST_T* parser_parse_variable(parser_T* parser, scope_T* scope, char* func_name)
     parser_eat(parser, TOKEN_ID);
 
     if (parser->current_token->type == TOKEN_EQUAL) {
+        if (strcmp(func_name, "\0") == 0)
+        {
+            printf("Syntax Error: non-declaration statement outside function body\n");
+            exit(1);
+        }
         return parser_parse_variable_definition(parser, scope, func_name);
     }
 
     if (parser->current_token->type == TOKEN_LPAREN) {
+        if (strcmp(func_name, "\0") == 0)
+        {
+            printf("Syntax Error: non-declaration statement outside function body\n");
+            exit(1);
+        }
         return parser_parse_function_call(parser, scope, func_name);
     }
 
@@ -312,22 +335,18 @@ AST_T* parser_parse_if(parser_T* parser, scope_T* scope, char* func_name)
 
     parser_eat(parser, TOKEN_ID);
 
-    AST_T* op = parser_parse_expr_func_body(parser, scope, func_name);
+    AST_T* op = parser_parse_expr(parser, scope, func_name);
     ast->op = op;
     parser_eat(parser, TOKEN_DO);
 
-    ast->if_body = parser_parse_statements_func_body(parser, scope, func_name);
+    ast->if_body = parser_parse_statements(parser, scope, func_name);
 
     if (parser->current_token->type == TOKEN_ELSE)
     {
         parser_eat(parser, TOKEN_ELSE);
-        ast->else_body = parser_parse_statements_func_body(parser, scope, func_name);
-        parser_eat(parser, TOKEN_END);
+        ast->else_body = parser_parse_statements(parser, scope, func_name);
     }
-    else
-    {
-        parser_eat(parser, TOKEN_END);
-    }
+    parser_eat(parser, TOKEN_COLON);
 
     ast->scope = scope;
     return ast;
@@ -343,7 +362,7 @@ AST_T* parser_parse_compare(parser_T* parser, scope_T* scope, AST_T* left, char*
 
     parser_eat(parser, parser->current_token->type);
 
-    AST_T* right = parser_parse_expr_func_body(parser, scope, func_name);
+    AST_T* right = parser_parse_expr(parser, scope, func_name);
 
     ast->right = right;
 
@@ -355,10 +374,10 @@ AST_T* parser_parse_while(parser_T* parser, scope_T* scope, char* func_name)
 {
     AST_T* ast = init_ast(AST_WHILE);
     parser_eat(parser, TOKEN_ID);
-    ast->op = parser_parse_expr_func_body(parser, scope, func_name);
+    ast->op = parser_parse_expr(parser, scope, func_name);
     parser_eat(parser, TOKEN_DO);
-    ast->while_body = parser_parse_statements_func_body(parser, scope, func_name);
-    parser_eat(parser, TOKEN_END);
+    ast->while_body = parser_parse_statements(parser, scope, func_name);
+    parser_eat(parser, TOKEN_COLON);
     ast->scope = scope;
     return ast;
 }
@@ -399,56 +418,25 @@ AST_T* parser_parse_int(parser_T* parser, scope_T* scope, char* func_name)
     return ast_int;
 }
 
-AST_T* parser_parse_function_call(parser_T* parser, scope_T* scope, char* func_name){
-    AST_T* ast = init_ast(AST_FUNCTION_CALL);
+AST_T* parser_parse_bool(parser_T* parser, scope_T* scope, char* func_name)
+{
+    AST_T* ast_bool = init_ast(AST_BOOL);
+    ast_bool->bool_value = parser->current_token->value;
 
-    ast->function_call_name = parser->prev_token->value;
+    parser_eat(parser, TOKEN_BOOL);
 
-    parser_eat(parser, TOKEN_LPAREN);
+    ast_bool->scope = scope;
 
-    ast->args = calloc(1, sizeof(struct AST_STRUCT*));
-    
-    if (parser->current_token->type != TOKEN_RPAREN)
-    {
-        AST_T* ast_expr = parser_parse_expr_func_body(parser, scope, func_name);
-        ast->args[0] = ast_expr;
-        ast->args_size += 1;
-    }
-
-    while (parser->current_token->type == TOKEN_COMMA)
-    {
-        parser_eat(parser, TOKEN_COMMA);
-        
-        AST_T* ast_expr = parser_parse_expr_func_body(parser, scope, func_name);
-        
-        ast->args_size += 1;
-
-        ast->args = realloc(
-            ast->args,
-            ast->args_size * sizeof(struct AST_STRUCT)
-        );
-        ast->args[ast->args_size-1] = ast_expr;
-    }
-
-    parser_eat(parser, TOKEN_RPAREN);
-
-    ast->scope = scope;
-
-    return ast;
+    return ast_bool;
 }
 
-AST_T* parser_parse_id(parser_T* parser, scope_T* scope)
+AST_T* parser_parse_id(parser_T* parser, scope_T* scope, char* func_name)
 {
     if (strcmp(parser->current_token->value, "func") == 0)
     {
         return parser_parse_function_definition(parser, scope);
     }
-    printf("Syntax Error: non-declaration statement outside function body\n");
-    exit(1);
-}
 
-AST_T* parser_parse_id_func_body(parser_T* parser, scope_T* scope, char* func_name)
-{
     if (strcmp(parser->current_token->value, "if") == 0)
     {
         return parser_parse_if(parser, scope, func_name);

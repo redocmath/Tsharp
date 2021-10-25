@@ -114,7 +114,7 @@ AST_T* scope_get_variable_definition(scope_T* scope, const char* name, const cha
         AST_T* vdef = scope->variable_definitions[i];
         if (strcmp(vdef->variable_definition_variable_name, name) == 0)
         {
-            if (strcmp(vdef->variable_definition_func_name, fname) == 0)
+            if (strcmp(vdef->variable_definition_func_name, "\0") == 0 || strcmp(vdef->variable_definition_func_name, fname) == 0)
             {
                 return vdef;
             }

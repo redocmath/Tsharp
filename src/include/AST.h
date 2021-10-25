@@ -14,6 +14,7 @@ typedef struct AST_STRUCT
         AST_WHILE,
         AST_STRING,
         AST_INT,
+        AST_BOOL,
         AST_COMPOUND,
         AST_NOOP,
     } type;
@@ -56,6 +57,9 @@ typedef struct AST_STRUCT
 
     // AST_INT
     long int int_value;
+
+    // AST_BOOL
+    char* bool_value;
 
     // AST_COMPOUND
     struct AST_STRUCT** compound_value;

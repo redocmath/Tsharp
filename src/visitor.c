@@ -25,6 +25,7 @@ AST_T* visitor_visit(visitor_T* visitor, AST_T* node)
         case AST_WHILE: return visitor_visit_while(visitor, node); break;
         case AST_STRING: return visitor_visit_string(visitor, node); break;
         case AST_INT: return visitor_visit_int(visitor, node); break;
+        case AST_BOOL: return visitor_visit_bool(visitor, node); break;
         case AST_COMPOUND: return visitor_visit_compound(visitor, node); break;
         case AST_NOOP: return node; break;
     }
@@ -45,6 +46,7 @@ static AST_T* builtin_function_print(visitor_T* visitor, AST_T** args, int args_
         {
             case AST_STRING: printf("%s", visited_ast->string_value); break;
             case AST_INT: printf("%ld", visited_ast->int_value); break;
+            case AST_BOOL: printf("%s", visited_ast->bool_value); break;
             default: printf("%p", visited_ast); break;
         }
     }
@@ -121,12 +123,12 @@ AST_T* visitor_visit_function_definition(visitor_T* visitor, AST_T* node)
 AST_T* visitor_visit_if(visitor_T* visitor, AST_T* node)
 {
     AST_T* visited_ast = visitor_visit(visitor, node->op);
-    if (visited_ast->type == AST_INT && visited_ast->int_value == 1)
+    if (visited_ast->type == AST_BOOL && strcmp(visited_ast->bool_value, "true") == 0)
     {
         return visitor_visit(visitor, node->if_body);
     }
     
-    if (visited_ast->type == AST_INT && visited_ast->int_value == 0)
+    if (visited_ast->type == AST_BOOL && strcmp(visited_ast->bool_value, "false") == 0)
     {
         return visitor_visit(visitor, node->else_body);
     }
@@ -136,7 +138,7 @@ AST_T* visitor_visit_if(visitor_T* visitor, AST_T* node)
 
 AST_T* visitor_visit_compare(visitor_T* visitor, AST_T* node)
 {
-    int value;
+    char* value;
 
     AST_T* visited_left = visitor_visit(visitor, node->left);
     AST_T* visited_right = visitor_visit(visitor, node->right);
@@ -147,11 +149,11 @@ AST_T* visitor_visit_compare(visitor_T* visitor, AST_T* node)
         {
             if (strcmp(visited_left->string_value, visited_right->string_value) == 0)
             {
-                value = 1;
+                value = "true";
             }
             else
             {
-                value = 0;
+                value = "false";
             }
         }
         else
@@ -159,11 +161,11 @@ AST_T* visitor_visit_compare(visitor_T* visitor, AST_T* node)
         {
             if (visited_left->int_value == visited_right->int_value)
             {
-                value = 1;
+                value = "true";
             }
             else
             {
-                value = 0;
+                value = "false";
             }
         }
         else
@@ -179,11 +181,11 @@ AST_T* visitor_visit_compare(visitor_T* visitor, AST_T* node)
         {
             if (visited_left->int_value > visited_right->int_value)
             {
-                value = 1;
+                value = "true";
             }
             else
             {
-                value = 0;
+                value = "false";
             }
         }
         else
@@ -199,11 +201,11 @@ AST_T* visitor_visit_compare(visitor_T* visitor, AST_T* node)
         {
             if (visited_left->int_value < visited_right->int_value)
             {
-                value = 1;
+                value = "true";
             }
             else
             {
-                value = 0;
+                value = "false";
             }
         }
         else
@@ -219,11 +221,11 @@ AST_T* visitor_visit_compare(visitor_T* visitor, AST_T* node)
         {
             if (strcmp(visited_left->string_value, visited_right->string_value) != 0)
             {
-                value = 1;
+                value = "true";
             }
             else
             {
-                value = 0;
+                value = "false";
             }
         }
         else
@@ -231,11 +233,11 @@ AST_T* visitor_visit_compare(visitor_T* visitor, AST_T* node)
         {
             if (visited_left->int_value != visited_right->int_value)
             {
-                value = 1;
+                value = "true";
             }
             else
             {
-                value = 0;
+                value = "false";
             }
         }
         else
@@ -245,24 +247,25 @@ AST_T* visitor_visit_compare(visitor_T* visitor, AST_T* node)
         }
     }
 
-    AST_T* ast_int = init_ast(AST_INT);
-    ast_int->int_value = value;
+    AST_T* ast_bool = init_ast(AST_BOOL);
+    ast_bool->bool_value = value;
 
-    return ast_int;
+    return ast_bool;
 }
 
 AST_T* visitor_visit_while(visitor_T* visitor, AST_T* node)
 {
     AST_T* visited_op = visitor_visit(visitor, node->op);
 
-    if (visited_op->type != AST_INT)
+    if (visited_op->type != AST_BOOL)
     {
         printf("ERROR: while loop unexpected value\n");
         exit(1);
     }
 
     while (1) {
-        if (visited_op->int_value == 1)
+        visited_op = visitor_visit(visitor, node->op);
+        if (strcmp(visited_op->bool_value, "true") == 0)
         {
             visitor_visit(visitor, node->while_body);
         }
@@ -284,6 +287,10 @@ AST_T* visitor_visit_int(visitor_T* visitor, AST_T* node)
     return node;
 }
 
+AST_T* visitor_visit_bool(visitor_T* visitor, AST_T* node)
+{
+    return node;
+}
 
 AST_T* visitor_visit_variable(visitor_T* visitor, AST_T* node)
 {

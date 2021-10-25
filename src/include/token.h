@@ -23,7 +23,9 @@ typedef struct TOKEN_STRUCT
         /* 15 */TOKEN_DO, // { -> do
         /* 16 */TOKEN_ELSE, // else
         /* 17 */TOKEN_INT, // 123
-        /* 18 */TOKEN_EOF // End Of File
+        /* 18 */TOKEN_BOOL, // true, false
+        /* 19 */TOKEN_COLON, // :
+        /* 20 */TOKEN_EOF // End Of File
     } type;
 
     char* value;
