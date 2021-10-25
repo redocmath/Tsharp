@@ -84,8 +84,8 @@ func main() do
     num = 1;
     while num < 10 do
         print("Hello World");
-    :end
-:end
+    end;
+end;
 ```
 
 ### Vim Syntax Highlighting
