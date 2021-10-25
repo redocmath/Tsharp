@@ -260,7 +260,7 @@ AST_T* parser_parse_function_definition(parser_T* parser, scope_T* scope)
 
     if (parser->current_token->type == TOKEN_COLON)
     {
-        printf("Syntax Error: function body is empty\n");
+        printf("SyntaxError: function body is empty (line %d)\n", parser->lexer->line_n);
         exit(1);
     }
 
@@ -339,6 +339,15 @@ AST_T* parser_parse_if(parser_T* parser, scope_T* scope, char* func_name)
     ast->op = op;
     parser_eat(parser, TOKEN_DO);
 
+    if (parser->current_token->type == TOKEN_COLON)
+    {
+        printf(
+            "SyntaxError: if body is empty (line %d)\n",
+            parser->lexer->line_n
+        );
+        exit(1);
+    }
+
     ast->if_body = parser_parse_statements(parser, scope, func_name);
 
     if (parser->current_token->type == TOKEN_ELSE)
@@ -376,6 +385,11 @@ AST_T* parser_parse_while(parser_T* parser, scope_T* scope, char* func_name)
     parser_eat(parser, TOKEN_ID);
     ast->op = parser_parse_expr(parser, scope, func_name);
     parser_eat(parser, TOKEN_DO);
+    if (parser->current_token->type == TOKEN_COLON)
+    {
+        printf("SyntaxError: while body is empty (line %d)\n", parser->lexer->line_n);
+        exit(1);
+    }
     ast->while_body = parser_parse_statements(parser, scope, func_name);
     parser_eat(parser, TOKEN_COLON);
     ast->scope = scope;
