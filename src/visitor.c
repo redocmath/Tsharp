@@ -130,7 +130,10 @@ AST_T* visitor_visit_if(visitor_T* visitor, AST_T* node)
     
     if (visited_ast->type == AST_BOOL && strcmp(visited_ast->bool_value, "false") == 0)
     {
-        return visitor_visit(visitor, node->else_body);
+        if (node->else_body != (void*) 0)
+        {
+            return visitor_visit(visitor, node->else_body);
+        }
     }
 
     return node;
