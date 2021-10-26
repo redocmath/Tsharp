@@ -16,7 +16,7 @@ jobs:
     - name: make install
       run: sudo make install
     - name: prepare
-      run: git clone https://github.com/ibukiyoshidaa/Tsharp; mv Tsharp/sample/main.t# sample.t#
+      run: git clone https://github.com/ibukiyoshidaa/Tsharp | mv Tsharp/sample/main.t# sample.t#
     - name: run
       run: t# sample.t#
     - name: clean
