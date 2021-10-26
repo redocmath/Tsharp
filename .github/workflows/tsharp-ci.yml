@@ -1,4 +1,4 @@
-name: C/C++ CI
+name: T# CI
 
 on:
   push:
@@ -13,8 +13,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: configure
-      run: ./configure
     - name: make install
       run: sudo make install
     - name: prepare
