@@ -505,6 +505,11 @@ AST_T* parser_parse_bool(parser_T* parser, scope_T* scope, char* func_name)
 
     ast_bool->scope = scope;
 
+    if (parser->current_token->type == TOKEN_EQUALS || parser->current_token->type == TOKEN_NOT_EQUALS)
+    {
+        return parser_parse_compare(parser, scope, ast_bool, func_name);
+    }
+
     return ast_bool;
 }
 
