@@ -23,6 +23,7 @@ AST_T* visitor_visit(visitor_T* visitor, AST_T* node)
         case AST_IF: return visitor_visit_if(visitor, node); break;
         case AST_COMPARE: return visitor_visit_compare(visitor, node); break;
         case AST_WHILE: return visitor_visit_while(visitor, node); break;
+        case AST_BINOP_INC_DEC: return visitor_visit_binop_inc_dec(visitor, node); break;
         case AST_STRING: return visitor_visit_string(visitor, node); break;
         case AST_INT: return visitor_visit_int(visitor, node); break;
         case AST_BOOL: return visitor_visit_bool(visitor, node); break;
@@ -321,6 +322,55 @@ AST_T* visitor_visit_while(visitor_T* visitor, AST_T* node)
     return node;
 }
 
+AST_T* visitor_visit_binop_inc_dec(visitor_T* visitor, AST_T* node)
+{
+    AST_T* vdef = scope_get_variable_definition(
+        node->scope,
+        node->binop_inc_dec_variable,
+        node->binop_inc_dec_func_name
+    );
+
+    if (vdef == (void*) 0)
+    {
+        printf("ERROR: Undifined variable '%s'\n", node->variable_name);
+        exit(1);
+    }
+    
+    AST_T* visited_value = visitor_visit(visitor, vdef->variable_definition_value);
+
+    if (visited_value->type != AST_INT)
+    {
+        printf("ERROR: mismatched types\n");
+        exit(1);
+    }
+
+    long int int_value;
+    if (node->binop_inc_dec_op == 19)
+    {
+        int_value = visited_value->int_value + 1;
+    }
+    else
+    if (node->binop_inc_dec_op == 20)
+    {
+        int_value = visited_value->int_value - 1;
+    }
+    
+    AST_T* ast_int = init_ast(AST_INT);
+    ast_int->int_value = int_value;
+
+    AST_T* ast = init_ast(AST_VARIABLE_DEFINITION);
+    ast->variable_definition_value = ast_int;
+
+    scope_change_variable_definition(
+        node->scope,
+        node->binop_inc_dec_variable,
+        node->binop_inc_dec_func_name,
+        ast->variable_definition_value
+    );
+
+    return ast_int;
+}
+
 AST_T* visitor_visit_string(visitor_T* visitor, AST_T* node)
 {
     return node;
@@ -347,7 +397,7 @@ AST_T* visitor_visit_variable(visitor_T* visitor, AST_T* node)
     if (vdef != (void*) 0)
         return visitor_visit(visitor, vdef->variable_definition_value);
 
-    printf("Error: Undifined variable '%s'\n", node->variable_name);
+    printf("ERROR: Undifined variable '%s'\n", node->variable_name);
     exit(1);
 }
 
