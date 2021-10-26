@@ -1,0 +1,5 @@
+
+func main() do
+    len = len("Hello World!");
+    print(len);
+end;
