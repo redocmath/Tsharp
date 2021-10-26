@@ -65,9 +65,9 @@ static AST_T* builtin_function_sleep(visitor_T* visitor, AST_T** args, int args_
 
         switch (visited_ast->type)
         {
-            case AST_STRING: printf("ERROR: mismatched types"); exit(1); break;
+            case AST_STRING: printf("ERROR: mismatched types\n"); exit(1); break;
             case AST_INT: sleep(visited_ast->int_value); break;
-            case AST_BOOL: printf("ERROR: mismatched types"); exit(1); break;
+            case AST_BOOL: printf("ERROR: mismatched types\n"); exit(1); break;
             default: printf("%p", visited_ast); break;
         }
     }
