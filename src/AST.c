@@ -41,6 +41,11 @@ AST_T* init_ast(int type)
     // AST_WHILE
     ast->while_body = (void*) 0;
 
+    // AST_BINOP_INC_DEC
+    ast->binop_inc_dec_variable = (void*) 0;
+    ast->binop_inc_dec_op = 0;
+    ast->binop_inc_dec_func_name = (void*) 0;
+
     // AST_STRING
     ast->string_value = (void*) 0;
 
