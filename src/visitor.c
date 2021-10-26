@@ -189,7 +189,20 @@ AST_T* visitor_visit_compare(visitor_T* visitor, AST_T* node)
             }
         }
         else
+        if (visited_left->type == AST_BOOL && visited_right->type == AST_BOOL)
         {
+            if (strcmp(visited_left->bool_value, visited_right->bool_value) == 0)
+            {
+                value = "true";
+            }
+            else
+            {
+                value = "false";
+            }
+        }
+        else
+        {
+            printf("this\n");
             printf("ERROR: Can't compare diferent data types\n");
             exit(1);
         }
@@ -252,6 +265,18 @@ AST_T* visitor_visit_compare(visitor_T* visitor, AST_T* node)
         if (visited_left->type == AST_INT && visited_right->type == AST_INT)
         {
             if (visited_left->int_value != visited_right->int_value)
+            {
+                value = "true";
+            }
+            else
+            {
+                value = "false";
+            }
+        }
+        else
+        if (visited_left->type == AST_BOOL && visited_right->type == AST_BOOL)
+        {
+            if (strcmp(visited_left->bool_value, visited_right->bool_value) != 0)
             {
                 value = "true";
             }
