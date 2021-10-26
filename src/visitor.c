@@ -202,8 +202,7 @@ AST_T* visitor_visit_compare(visitor_T* visitor, AST_T* node)
         }
         else
         {
-            printf("this\n");
-            printf("ERROR: Can't compare diferent data types\n");
+            printf("ERROR: mismatched types\n");
             exit(1);
         }
     }
@@ -223,7 +222,7 @@ AST_T* visitor_visit_compare(visitor_T* visitor, AST_T* node)
         }
         else
         {
-            printf("ERROR: Can't compare diferent data types\n");
+            printf("ERROR: mismatched types\n");
             exit(1);
         }
     }
@@ -243,7 +242,7 @@ AST_T* visitor_visit_compare(visitor_T* visitor, AST_T* node)
         }
         else
         {
-            printf("ERROR: Can't compare diferent data types\n");
+            printf("ERROR: mismatched types\n");
             exit(1);
         }
     }
@@ -287,7 +286,7 @@ AST_T* visitor_visit_compare(visitor_T* visitor, AST_T* node)
         }
         else
         {
-            printf("ERROR: Can't compare diferent data types\n");
+            printf("ERROR: mismatched types\n");
             exit(1);
         }
     }
