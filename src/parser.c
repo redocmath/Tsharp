@@ -178,16 +178,6 @@ AST_T* parser_parse_function_call(parser_T* parser, scope_T* scope, char* func_n
 
     parser_eat(parser, TOKEN_RPAREN);
 
-    if (parser->current_token->type == TOKEN_COLON)
-    {
-        printf(
-            "SyntaxError: Unexpected token '%s' (line %d)\n",
-            parser->current_token->value,
-            parser->lexer->line_n
-        );
-        exit(1);
-    }
-
     ast->scope = scope;
 
     return ast;
@@ -218,16 +208,6 @@ AST_T* parser_parse_variable_definition(parser_T* parser, scope_T* scope, char* 
     AST_T* variable_definition_value = parser_parse_expr(parser, scope, func_name);
     ast->variable_definition_value = variable_definition_value;
 
-    if (parser->current_token->type == TOKEN_COLON)
-    {
-        printf(
-            "SyntaxError: Unexpected token '%s' (line %d)\n",
-            parser->current_token->value,
-            parser->lexer->line_n
-        );
-        exit(1);
-    }
-
     ast->scope = scope;
 
     return ast;
@@ -255,16 +235,6 @@ AST_T* parser_parse_variable_update_value_from_other_func(parser_T* parser, scop
 
     AST_T* variable_definition_value = parser_parse_expr(parser, scope, func_name);
     ast->variable_definition_value = variable_definition_value;
-
-    if (parser->current_token->type == TOKEN_COLON)
-    {
-        printf(
-            "SyntaxError: Unexpected token '%s' (line %d)\n",
-            parser->current_token->value,
-            parser->lexer->line_n
-        );
-        exit(1);
-    }
 
     ast->scope = scope;
 
@@ -355,6 +325,11 @@ AST_T* parser_parse_variable(parser_T* parser, scope_T* scope, char* func_name)
         return parser_parse_function_call(parser, scope, func_name);
     }
 
+    if (parser->current_token->type == TOKEN_PLUS_PLUS || parser->current_token->type == TOKEN_MINUS_MINUS)
+    {
+        return parser_parse_binop_inc_dec(parser, scope, token_value, func_name);
+    }
+
     AST_T* ast = init_ast(AST_VARIABLE);
     
     char* variable_name;
@@ -383,6 +358,11 @@ AST_T* parser_parse_variable(parser_T* parser, scope_T* scope, char* func_name)
     if (parser->current_token->type == TOKEN_EQUAL)
     {
         return parser_parse_variable_update_value_from_other_func(parser, scope, token_value, variable_name);
+    }
+
+    if (parser->current_token->type == TOKEN_PLUS_PLUS || parser->current_token->type == TOKEN_MINUS_MINUS)
+    {
+        return parser_parse_binop_inc_dec(parser, scope, variable_name, token_value);
     }
 
     if (parser->current_token->type == TOKEN_EQUALS || parser->current_token->type == TOKEN_NOT_EQUALS || parser->current_token->type == TOKEN_GREATER_THAN || parser->current_token->type == TOKEN_LESS_THAN)
@@ -458,6 +438,29 @@ AST_T* parser_parse_while(parser_T* parser, scope_T* scope, char* func_name)
     parser_eat(parser, TOKEN_END);
     ast->scope = scope;
     return ast;
+}
+
+AST_T* parser_parse_binop_inc_dec(parser_T* parser, scope_T* scope, char* vname, char* func_name)
+{
+    AST_T* ast_binop = init_ast(AST_BINOP_INC_DEC);
+
+    ast_binop->binop_inc_dec_variable = calloc(
+        strlen(vname) + 1,
+        sizeof(char)
+    );
+    strcpy(ast_binop->binop_inc_dec_variable, vname);
+
+    ast_binop->binop_inc_dec_func_name = calloc(
+        strlen(vname) + 1,
+        sizeof(char)
+    );
+    strcpy(ast_binop->binop_inc_dec_func_name, func_name);
+
+    ast_binop->binop_inc_dec_op = parser->current_token->type;
+    parser_eat(parser, parser->current_token->type);
+
+    ast_binop->scope = scope;
+    return ast_binop;
 }
 
 AST_T* parser_parse_string(parser_T* parser, scope_T* scope, char* func_name)
