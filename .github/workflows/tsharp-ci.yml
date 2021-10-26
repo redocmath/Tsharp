@@ -12,10 +12,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
     - name: make install
       run: sudo make install
     - name: run
-      run: t# helloworld.t#
+      run: t# sample/main.t#
     - name: clean
       run: sudo make clean;
