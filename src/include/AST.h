@@ -15,6 +15,7 @@ typedef struct AST_STRUCT
         AST_STRING,
         AST_INT,
         AST_BOOL,
+        AST_BINOP_INC_DEC,
         AST_COMPOUND,
         AST_NOOP,
     } type;
@@ -51,8 +52,13 @@ typedef struct AST_STRUCT
     struct AST_STRUCT* right;
     int compare_op;
 
-    //AST_WHILE
+    // AST_WHILE
     struct AST_STRUCT* while_body;
+
+    // AST_BINOP_INC_DEC
+    char* binop_inc_dec_variable;
+    int binop_inc_dec_op;
+    char* binop_inc_dec_func_name;
 
     // AST_STRING
     char* string_value;
