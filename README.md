@@ -81,9 +81,10 @@ end;
 > While loop
 ```pascal
 func main() do
-    num = 1;
-    while num < 10 do
-        print("Hello World");
+    num = 0;
+    while num < 101 do
+        print(num);
+        num++;
     end;
 end;
 ```
