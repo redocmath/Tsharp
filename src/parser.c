@@ -30,7 +30,7 @@ void parser_eat(parser_T* parser, int token_type)
         int num = strlen(parser->prev_token->value) - 10;
 
         printf(
-            "SyntaxError: Unexpected token '%s' (line %d)\n",
+            "SyntaxError: unexpected token '%s' (line %d)\n",
             parser->current_token->value,
             parser->lexer->line_n
         );
@@ -310,7 +310,7 @@ AST_T* parser_parse_variable(parser_T* parser, scope_T* scope, char* func_name)
     if (parser->current_token->type == TOKEN_EQUAL) {
         if (strcmp(func_name, "\0") == 0)
         {
-            printf("Syntax Error: non-declaration statement outside function body\n");
+            printf("SyntaxError: non-declaration statement outside function body\n");
             exit(1);
         }
         return parser_parse_variable_definition(parser, scope, func_name);
@@ -319,7 +319,7 @@ AST_T* parser_parse_variable(parser_T* parser, scope_T* scope, char* func_name)
     if (parser->current_token->type == TOKEN_LPAREN) {
         if (strcmp(func_name, "\0") == 0)
         {
-            printf("Syntax Error: non-declaration statement outside function body\n");
+            printf("SyntaxError: non-declaration statement outside function body\n");
             exit(1);
         }
         return parser_parse_function_call(parser, scope, func_name);

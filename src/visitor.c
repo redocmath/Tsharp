@@ -32,7 +32,7 @@ AST_T* visitor_visit(visitor_T* visitor, AST_T* node)
         case AST_NOOP: return node; break;
     }
 
-    printf("Error: Uncaught statement of type '%d'\n", node->type);
+    printf("Error: uncaught statement of type '%d'\n", node->type);
     exit(1);
 
     return init_ast(AST_NOOP);
@@ -92,13 +92,13 @@ AST_T* visitor_visit_function_call(visitor_T* visitor, AST_T* node)
     {
         if (node->args_size != 1)
         {
-            printf("ERROR: func len expected one argument\n");
+            printf("ERROR: function len expected one argument\n");
             exit(1);
         }
         AST_T* visited_value = visitor_visit(visitor, node->args[0]);
         if (visited_value->type != AST_STRING)
         {
-            printf("ERROR: func len expected type string\n");
+            printf("ERROR: function len expected type string\n");
             exit(1); 
         }
 
@@ -116,7 +116,7 @@ AST_T* visitor_visit_function_call(visitor_T* visitor, AST_T* node)
 
     if (fdef == (void*) 0)
     {
-        printf("Error: Undefined function %s\n", node->function_call_name);
+        printf("Error: undefined function %s\n", node->function_call_name);
         exit(1);
     }
 
@@ -378,7 +378,7 @@ AST_T* visitor_visit_binop_inc_dec(visitor_T* visitor, AST_T* node)
 
     if (vdef == (void*) 0)
     {
-        printf("ERROR: Undifined variable '%s'\n", node->variable_name);
+        printf("ERROR: undifined variable '%s'\n", node->variable_name);
         exit(1);
     }
     
@@ -443,7 +443,7 @@ AST_T* visitor_visit_variable(visitor_T* visitor, AST_T* node)
     if (vdef != (void*) 0)
         return visitor_visit(visitor, vdef->variable_definition_value);
 
-    printf("ERROR: Undifined variable '%s'\n", node->variable_name);
+    printf("ERROR: undifined variable '%s'\n", node->variable_name);
     exit(1);
 }
 
