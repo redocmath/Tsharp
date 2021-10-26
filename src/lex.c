@@ -116,9 +116,48 @@ token_T* lexer_get_next_token(lexer_T* lexer)
             }
         }
 
+        if (lexer->c == '+')
+        {
+            char* value = lexer_get_current_char_as_string(lexer);
+            lexer_advance(lexer);
+            if (lexer->c == '+')
+            {
+                value = realloc(value, strlen(value) + 2);
+                char* strchar = lexer_get_current_char_as_string(lexer);
+                strcat(value, strchar);
+                free(strchar);
+
+                return lexer_advance_token(lexer, init_token(TOKEN_PLUS_PLUS, value));
+            }
+            else
+            {
+                printf("SyntaxError: Unexpected '%c' (line %d)\n", lexer->c, lexer->line_n);
+                exit(1);
+            }
+        }
+
+        if (lexer->c == '-')
+        {
+            char* value = lexer_get_current_char_as_string(lexer);
+            lexer_advance(lexer);
+            if (lexer->c == '-')
+            {
+                value = realloc(value, strlen(value) + 2);
+                char* strchar = lexer_get_current_char_as_string(lexer);
+                strcat(value, strchar);
+                free(strchar);
+
+                return lexer_advance_token(lexer, init_token(TOKEN_MINUS_MINUS, value));
+            }
+            else
+            {
+                printf("SyntaxError: Unexpected '%c' (line %d)\n", lexer->c, lexer->line_n);
+                exit(1);
+            }
+        }
+
         switch (lexer->c)
         {
-            case ':': return lexer_advance_token(lexer, init_token(TOKEN_COLON, lexer_get_current_char_as_string(lexer))); break;
             case '>': return lexer_advance_token(lexer, init_token(TOKEN_GREATER_THAN, lexer_get_current_char_as_string(lexer))); break;
             case '<': return lexer_advance_token(lexer, init_token(TOKEN_LESS_THAN, lexer_get_current_char_as_string(lexer))); break;
             case '.': return lexer_advance_token(lexer, init_token(TOKEN_DOT, lexer_get_current_char_as_string(lexer))); break;
