@@ -1,0 +1,25 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: configure
+      run: ./configure
+    - name: make install
+      run: sudo make install
+    - name: prepare
+      run: echo "func main() do \nprint("Hello World");\nend;" > sample.t#
+    - name: run
+      run: t# sample.t#
+    - name: clean
+      run: sudo make clean; rm sample.t#
