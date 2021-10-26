@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 visitor_T* init_visitor()
 {
@@ -56,11 +57,35 @@ static AST_T* builtin_function_print(visitor_T* visitor, AST_T** args, int args_
     return init_ast(AST_NOOP);
 }
 
+static AST_T* builtin_function_sleep(visitor_T* visitor, AST_T** args, int args_size)
+{
+    for (int i = 0; i < args_size; i++)
+    {
+        AST_T* visited_ast = visitor_visit(visitor, args[i]);
+
+        switch (visited_ast->type)
+        {
+            case AST_STRING: printf("ERROR: mismatched types"); exit(1); break;
+            case AST_INT: sleep(visited_ast->int_value); break;
+            case AST_BOOL: printf("ERROR: mismatched types"); exit(1); break;
+            default: printf("%p", visited_ast); break;
+        }
+    }
+    printf("\n");
+
+    return init_ast(AST_NOOP);
+}
+
 AST_T* visitor_visit_function_call(visitor_T* visitor, AST_T* node)
 {
     if (strcmp(node->function_call_name, "print") == 0)
     {
         return builtin_function_print(visitor, node->args, node->args_size);
+    }
+
+    if (strcmp(node->function_call_name, "sleep") == 0)
+    {
+        return builtin_function_sleep(visitor, node->args, node->args_size);
     }
 
     AST_T* fdef = scope_get_func_definition(
