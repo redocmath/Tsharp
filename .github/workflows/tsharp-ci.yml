@@ -16,6 +16,6 @@ jobs:
     - name: make install
       run: sudo make install
     - name: run
-      run: t# ci-test.t#
+      run: t# test/ci-test.t#
     - name: clean
       run: sudo make clean;
