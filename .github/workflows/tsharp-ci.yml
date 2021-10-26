@@ -16,6 +16,6 @@ jobs:
     - name: make install
       run: sudo make install
     - name: run
-      run: t# sample/main.t#
+      run: t# helloworld.t#
     - name: clean
       run: sudo make clean;
