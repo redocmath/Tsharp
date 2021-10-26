@@ -15,9 +15,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: make install
       run: sudo make install
-    - name: prepare
-      run: echo 'func main() do\nprint("Hello World");\nend;' > sample.t#
     - name: run
-      run: t# sample.t#
+      run: t# sample/main.t#
     - name: clean
-      run: sudo make clean; rm -rf sample.t# Tsharp
+      run: sudo make clean;
