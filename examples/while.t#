@@ -1,13 +1,10 @@
 
 func main() do
-	num = 100;
+	num = 0;
 
-    while 10 != num do
-		if num == 100 do
-			print("num is 100");
-		end;
-		
-		num = 10;
+    while num < 100 do
+	    print(num);
+		num++;
 	end;
 end;
 
