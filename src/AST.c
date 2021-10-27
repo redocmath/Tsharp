@@ -49,6 +49,9 @@ AST_T* init_ast(int type)
     ast->binop_inc_dec_op = 0;
     ast->binop_inc_dec_func_name = (void*) 0;
 
+    // AST_PAREN
+    ast->paren_value = (void*) 0;
+
     // AST_STRING
     ast->string_value = (void*) 0;
 

@@ -17,6 +17,7 @@ AST_T* visitor_visit(visitor_T* visitor, AST_T* node)
 {
     switch (node->type)
     {
+        case AST_LIST: return visitor_visit_paren(visitor, node); break;
         case AST_FUNCTION_DEFINITION: return visitor_visit_function_definition(visitor, node); break;
         case AST_VARIABLE_DEFINITION: return visitor_visit_variable_definition(visitor, node); break;
         case AST_FUNCTION_CALL: return visitor_visit_function_call(visitor, node); break;
@@ -74,6 +75,11 @@ static AST_T* builtin_function_sleep(visitor_T* visitor, AST_T** args, int args_
     printf("\n");
 
     return init_ast(AST_NOOP);
+}
+
+AST_T* visitor_visit_paren(visitor_T* visitor, AST_T* node)
+{
+    return visitor_visit(visitor, node->paren_value);
 }
 
 AST_T* visitor_visit_function_call(visitor_T* visitor, AST_T* node)

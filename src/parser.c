@@ -135,6 +135,7 @@ AST_T* parser_parse_expr(parser_T* parser, scope_T* scope, char* func_name)
 {
     switch (parser->current_token->type)
     {
+        case TOKEN_LPAREN: return parser_parse_paren(parser, scope, func_name);
         case TOKEN_STRING: return parser_parse_string(parser, scope, func_name);
         case TOKEN_INT: return parser_parse_int(parser, scope, func_name);
         case TOKEN_BOOL: return parser_parse_bool(parser, scope, func_name);
@@ -303,6 +304,20 @@ AST_T* parser_parse_function_definition(parser_T* parser, scope_T* scope)
 
     ast->scope = scope;
 
+    return ast;
+}
+
+AST_T* parser_parse_paren(parser_T* parser, scope_T* scope, char* func_name)
+{
+    AST_T* ast = init_ast(AST_LIST);
+    parser_eat(parser, TOKEN_LPAREN);
+    ast->paren_value = parser_parse_expr(parser, scope, func_name);
+    parser_eat(parser, TOKEN_RPAREN);
+    ast->scope = scope;
+    if (parser->current_token->type == TOKEN_EQUALS || parser->current_token->type == TOKEN_NOT_EQUALS || parser->current_token->type == TOKEN_GREATER_THAN || parser->current_token->type == TOKEN_LESS_THAN)
+    {
+        return parser_parse_compare(parser, scope, ast, func_name);
+    }
     return ast;
 }
 
