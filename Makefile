@@ -17,9 +17,9 @@ $(exec): $(objects)
 install:
 	make
 ifeq ($(OS), Windows_NT)
-	cp ./tsharp.exe /usr/local/bin/t#
-else
 	echo "Not Available in Windows"
+else
+	cp ./tsharp.exe /usr/local/bin/t#
 endif
 
 clean:
