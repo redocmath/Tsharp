@@ -95,17 +95,17 @@ end;
 func main() do
     i = 1;
     while i < 101 do
-		if rem(i, 15) == 0 do
-		    print("FizzBuzz");
-		elif rem(i, 3) == 0 do
-			print("Fizz");
-		elif rem(i, 5) == 0 do
-			print("Buzz");
-		else
-			print(i);
-		end;
-		i++;
-	end;
+        if rem(i, 15) == 0 do
+            print("FizzBuzz");
+        elif rem(i, 3) == 0 do
+            print("Fizz");
+        elif rem(i, 5) == 0 do
+            print("Buzz");
+        else
+            print(i);
+        end;
+        i++;
+    end;
 end;
 ```
 
