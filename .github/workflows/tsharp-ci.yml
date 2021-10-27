@@ -25,6 +25,6 @@ jobs:
     - name: make
       run: make
     - name: run
-      run: .\t# test\ci-test.t#
+      run: t#.exe test\ci-test.t#
     - name: clean
       run: make clean
