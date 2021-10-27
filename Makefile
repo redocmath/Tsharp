@@ -1,4 +1,4 @@
-exec = tsharp.out
+exec = tsharp
 sources = $(wildcard src/*.c)
 objects = $(sources:.c=.o)
 flags = -g
