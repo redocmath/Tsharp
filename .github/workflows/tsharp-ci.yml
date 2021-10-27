@@ -22,10 +22,9 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
-    - shell: bash
     - name: make
       run: make
     - name: run
-      run: t#.exe test\ci-test.t#
+      run: dir | t#.exe test\ci-test.t#
     - name: clean
       run: make clean
