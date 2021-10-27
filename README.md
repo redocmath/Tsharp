@@ -93,3 +93,10 @@ end;
 ### Vim Syntax Highlighting
 
 - <a href="https://github.com/ibukiyoshidaa/Tsharp/blob/main/editor/tsharp.vim">Vim</a>
+
+
+## Contributors
+
+<a href="https://github.com/ibukiyoshidaa/Tsharp/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=ibukiyoshidaa/Tsharp" />
+</a>
