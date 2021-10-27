@@ -22,9 +22,9 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
-    - name: make install
-      run: sudo make install
+    - name: make
+      run: make
     - name: run
-      run: t# test/ci-test.t#
+      run: ./t# test/ci-test.t#
     - name: clean
-      run: sudo make clean;
+      run: make clean
