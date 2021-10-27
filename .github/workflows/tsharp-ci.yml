@@ -22,7 +22,6 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
-    - shell: bash
     - name: make install
       run: sudo make install
     - name: run
