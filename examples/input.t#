@@ -1,0 +1,6 @@
+
+
+func main() do
+	text = input();
+	print(text);
+end;
