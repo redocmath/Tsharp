@@ -32,6 +32,9 @@ AST_T* init_ast(int type)
     ast->op = (void*) 0;
     ast->if_body = (void*) 0;
     ast->else_body = (void*) 0;
+    ast->elifop = (void*) 0;
+    ast->elifbody = (void*) 0;
+    ast->elif_size = 0;
 
     // AST_COMPARE
     ast->left = (void*) 0;

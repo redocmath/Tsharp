@@ -180,6 +180,11 @@ AST_T* parser_parse_function_call(parser_T* parser, scope_T* scope, char* func_n
 
     ast->scope = scope;
 
+    if (parser->current_token->type == TOKEN_EQUALS || parser->current_token->type == TOKEN_NOT_EQUALS || parser->current_token->type == TOKEN_GREATER_THAN || parser->current_token->type == TOKEN_LESS_THAN)
+    {
+        return parser_parse_compare(parser, scope, ast, func_name);
+    }
+
     return ast;
 }
 
@@ -393,6 +398,43 @@ AST_T* parser_parse_if(parser_T* parser, scope_T* scope, char* func_name)
     }
 
     ast->if_body = parser_parse_statements(parser, scope, func_name);
+
+    if (parser->current_token->type == TOKEN_ELIF)
+    {
+        parser_eat(parser, TOKEN_ELIF);
+        ast->elifop = calloc(1, sizeof(struct AST_STRUCT*));
+        ast->elifbody = calloc(1, sizeof(struct AST_STRUCT*));
+
+        ast->elif_size += 1;
+        AST_T* elifop = parser_parse_expr(parser, scope, func_name);
+        ast->elifop[ast->elif_size-1] = elifop;
+        parser_eat(parser, TOKEN_DO);
+        ast->elifbody[ast->elif_size-1] = parser_parse_statements(parser, scope, func_name);
+
+        while (parser->current_token->type == TOKEN_ELIF)
+        {
+            parser_eat(parser, TOKEN_ELIF);
+
+            ast->elif_size += 1;
+
+            ast->elifop =
+                realloc(
+                    ast->elifop,
+                    ast->elif_size * sizeof(struct AST_STRUCT*)
+                );
+
+            AST_T* elifop = parser_parse_expr(parser, scope, func_name);
+            ast->elifop[ast->elif_size-1] = elifop;
+            parser_eat(parser, TOKEN_DO);
+
+            ast->elifbody =
+                realloc(
+                    ast->elifbody,
+                    ast->elif_size * sizeof(struct AST_STRUCT*)
+                );
+            ast->elifbody[ast->elif_size-1] = parser_parse_statements(parser, scope, func_name);
+        }
+    }
 
     if (parser->current_token->type == TOKEN_ELSE)
     {

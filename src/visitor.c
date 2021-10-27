@@ -83,6 +83,61 @@ AST_T* visitor_visit_function_call(visitor_T* visitor, AST_T* node)
         return builtin_function_print(visitor, node->args, node->args_size);
     }
 
+    if (strcmp(node->function_call_name, "add") == 0)
+    {
+        AST_T* visited_ast_left = visitor_visit(visitor, node->args[0]);
+        AST_T* visited_ast_right = visitor_visit(visitor, node->args[0]);
+        long int int_value = visited_ast_left->int_value + visited_ast_right->int_value;
+        AST_T* ast_int = init_ast(AST_INT);
+        ast_int->int_value = int_value;
+
+        return ast_int;
+    }
+
+    if (strcmp(node->function_call_name, "minus") == 0)
+    {
+        AST_T* visited_ast_left = visitor_visit(visitor, node->args[0]);
+        AST_T* visited_ast_right = visitor_visit(visitor, node->args[0]);
+        long int int_value = visited_ast_left->int_value - visited_ast_right->int_value;
+        AST_T* ast_int = init_ast(AST_INT);
+        ast_int->int_value = int_value;
+
+        return ast_int;
+    }
+
+    if (strcmp(node->function_call_name, "mul") == 0)
+    {
+        AST_T* visited_ast_left = visitor_visit(visitor, node->args[0]);
+        AST_T* visited_ast_right = visitor_visit(visitor, node->args[0]);
+        long int int_value = visited_ast_left->int_value * visited_ast_right->int_value;
+        AST_T* ast_int = init_ast(AST_INT);
+        ast_int->int_value = int_value;
+
+        return ast_int;
+    }
+
+    if (strcmp(node->function_call_name, "div") == 0)
+    {
+        AST_T* visited_ast_left = visitor_visit(visitor, node->args[0]);
+        AST_T* visited_ast_right = visitor_visit(visitor, node->args[0]);
+        long int int_value = visited_ast_left->int_value / visited_ast_right->int_value;
+        AST_T* ast_int = init_ast(AST_INT);
+        ast_int->int_value = int_value;
+
+        return ast_int;
+    }
+
+    if (strcmp(node->function_call_name, "rem") == 0)
+    {
+        AST_T* visited_ast_left = visitor_visit(visitor, node->args[0]);
+        AST_T* visited_ast_right = visitor_visit(visitor, node->args[1]);
+        long int int_value = visited_ast_left->int_value % visited_ast_right->int_value;
+        AST_T* ast_int = init_ast(AST_INT);
+        ast_int->int_value = int_value;
+
+        return ast_int;
+    }
+
     if (strcmp(node->function_call_name, "sleep") == 0)
     {
         return builtin_function_sleep(visitor, node->args, node->args_size);
@@ -190,6 +245,15 @@ AST_T* visitor_visit_if(visitor_T* visitor, AST_T* node)
     if (visited_ast->type == AST_BOOL && strcmp(visited_ast->bool_value, "true") == 0)
     {
         return visitor_visit(visitor, node->if_body);
+    }
+
+    for (int i = 0; i < node->elif_size; i++)
+    {
+        AST_T* visited_else = visitor_visit(visitor, node->elifop[i]);
+        if (strcmp(visited_else->bool_value, "true") == 0)
+        {
+            return visitor_visit(visitor, node->elifbody[i]);
+        }
     }
     
     if (visited_ast->type == AST_BOOL && strcmp(visited_ast->bool_value, "false") == 0)

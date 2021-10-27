@@ -45,6 +45,9 @@ typedef struct AST_STRUCT
     // AST_IF
     struct AST_STRUCT* op;
     struct AST_STRUCT* if_body;
+    struct AST_STRUCT** elifop;
+    struct AST_STRUCT** elifbody;
+    size_t elif_size;
     struct AST_STRUCT* else_body;
 
     // AST_COMPARE

@@ -26,6 +26,7 @@ typedef struct TOKEN_STRUCT
         /* 18 */TOKEN_BOOL, // true, false
         /* 19 */TOKEN_PLUS_PLUS, // ++
         /* 20 */TOKEN_MINUS_MINUS, // --
+        /* 21 */TOKEN_ELIF, // ELIF
         /* 21 */TOKEN_EOF // End Of File
     } type;
 

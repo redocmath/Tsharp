@@ -259,6 +259,11 @@ token_T* lexer_collect_id(lexer_T* lexer)
         return init_token(TOKEN_BOOL, value);
     }
 
+    if (strcmp(value, "elif") == 0)
+    {
+        return init_token(TOKEN_ELIF, value);
+    }
+
     return init_token(TOKEN_ID, value);
 }
 
