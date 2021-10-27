@@ -164,6 +164,45 @@ AST_T* visitor_visit_function_call(visitor_T* visitor, AST_T* node)
         return ast_int;
     }
 
+    if (strcmp(node->function_call_name, "input") == 0)
+    {
+        if (node->args_size > 1)
+        {
+            printf("ERROR: function input expected one argument\n");
+            exit(1);
+        }
+        if (node->args[0] != (void*) 0)
+        {
+            AST_T* visited_ast = visitor_visit(visitor, node->args[0]);
+            if (visited_ast->type != AST_STRING)
+            {
+                printf("ERROR: function input expected type string\n");
+                exit(1);
+            }
+            printf("%s", visited_ast->string_value);
+        }
+
+        char input_text[100];
+        char* text;
+
+        fgets(input_text, 100, stdin);
+        int last = strlen(input_text) - 1;
+        if (last >= 0 && input_text[last] == '\n') {
+            input_text[last] = '\0';
+        }
+
+        text = calloc(
+            strlen(input_text) + 1,
+            sizeof(char)
+        );
+        strcpy(text, input_text);
+
+        AST_T* ast_string = init_ast(AST_STRING);
+        ast_string->string_value = text;
+
+        return ast_string;
+    }
+
     AST_T* fdef = scope_get_func_definition(
         node->scope,
         node->function_call_name
