@@ -8,13 +8,15 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: make install
       run: sudo make install
+  test-1:
+    runs-on: ubuntu-lastest
+    steps:
+    - uses: actions/checkout@v2
     - name: run
       run: t# test/ci-test.t#
     - name: clean
