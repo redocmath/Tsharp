@@ -19,7 +19,7 @@ install:
 ifeq ($(OS), Windows_NT)
 	echo "Not Available in Windows"
 else
-	cp ./tsharp.exe /usr/local/bin/t#
+	cp ./tsharp.out /usr/local/bin/t#
 endif
 
 clean:
