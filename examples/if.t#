@@ -1,16 +1,18 @@
 
 func main() do
+
     if true do
 		print(true);
 	end;
 
-	if false do
-		print(false);
+	name = "T# 😆";
+
+	if name == "T# 🚀" do
+		print("T# 🚀");
+	elif name == "T# 😆" do
+		print("T# 😆");
 	else
-		print(true);
+		print("T#");
 	end;
 
-	if false do
-		print(false);
-	end;
 end;

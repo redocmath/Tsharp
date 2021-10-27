@@ -12,5 +12,9 @@ func main() do
         print("num is 10!");
     end;
 
+    if add(2, 2) == 4 do
+        print("it worked!");
+    end
+
     print("Hello World");
 end;
