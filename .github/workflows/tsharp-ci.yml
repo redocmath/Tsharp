@@ -25,6 +25,6 @@ jobs:
     - name: make
       run: make
     - name: run
-      run: tsharp.exe test\ci-test.t#
+      run: .\tsharp.exe test\ci-test.t#
     - name: clean
       run: make clean
