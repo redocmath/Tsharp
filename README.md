@@ -90,6 +90,25 @@ func main() do
 end;
 ```
 
+> FizzBuzz
+```pascal
+func main() do
+    i = 1;
+    while i < 101 do
+		if rem(i, 15) == 0 do
+		    print("FizzBuzz");
+		elif rem(i, 3) == 0 do
+			print("Fizz");
+		elif rem(i, 5) == 0 do
+			print("Buzz");
+		else
+			print(i);
+		end;
+		i++;
+	end;
+end;
+```
+
 ### Vim Syntax Highlighting
 
 - <a href="https://github.com/ibukiyoshidaa/Tsharp/blob/main/editor/tsharp.vim">Vim</a>
