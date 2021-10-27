@@ -7,16 +7,24 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  Ubuntu:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - name: make install
       run: sudo make install
-  test-1:
-    runs-on: ubuntu-lastest
+    - name: run
+      run: t# test/ci-test.t#
+    - name: clean
+      run: sudo make clean;
+
+  Windows:
+    runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
+    - shell: bash
+    - name: make install
+      run: sudo make install
     - name: run
       run: t# test/ci-test.t#
     - name: clean
